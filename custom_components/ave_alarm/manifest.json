@@ -6,5 +6,5 @@
   "documentation": "https://github.com/danardelean/ave_alarm",
   "iot_class": "local_push",
   "requirements": ["websockets>=12.0"],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }

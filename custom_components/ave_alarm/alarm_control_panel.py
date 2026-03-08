@@ -11,7 +11,6 @@ from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
     AlarmControlPanelEntityFeature,
     AlarmControlPanelState,
-    CodeFormat,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -75,6 +74,8 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
 
     _attr_has_entity_name = True
     _attr_supported_features = AlarmControlPanelEntityFeature.ARM_AWAY
+    _attr_code_arm_required = False
+    _attr_code_format = None
 
     def __init__(
         self,
@@ -85,6 +86,8 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
         self._client = client
         self._area_id = area_id
         self._attr_unique_id = f"ave_alarm_{entry_id}_area_{area_id}"
+        self._attr_code_arm_required = False
+        self._attr_code_format = None
         self._unregister_callback = None
 
     @property
@@ -94,14 +97,6 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
             self._area_id,
             _AREA_NAMES.get(self._area_id, f"Area {self._area_id}"),
         )
-
-    @property
-    def code_arm_required(self) -> bool:
-        return False
-
-    @property
-    def code_format(self) -> CodeFormat | None:
-        return None
 
     async def async_added_to_hass(self) -> None:
         self._unregister_callback = self._client.register_callback(
@@ -152,6 +147,8 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
     _attr_has_entity_name = True
     _attr_name = "AVE Alarm"
     _attr_supported_features = AlarmControlPanelEntityFeature.ARM_AWAY
+    _attr_code_arm_required = False
+    _attr_code_format = None
 
     def __init__(
         self,
@@ -162,15 +159,9 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
         self._client = client
         self._areas = areas
         self._attr_unique_id = f"ave_alarm_{entry_id}_global"
+        self._attr_code_arm_required = False
+        self._attr_code_format = None
         self._unregister_callback = None
-
-    @property
-    def code_arm_required(self) -> bool:
-        return False
-
-    @property
-    def code_format(self) -> CodeFormat | None:
-        return None
 
     async def async_added_to_hass(self) -> None:
         self._unregister_callback = self._client.register_callback(
