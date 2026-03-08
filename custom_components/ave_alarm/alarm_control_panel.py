@@ -93,6 +93,8 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
         self._area_id = area_id
         self._attr_name = area_name
         self._attr_unique_id = f"ave_alarm_{entry_id}_area_{area_id}"
+        self._attr_code_arm_required = False
+        self._attr_code_format = None
         self._unregister_callback = None
 
     @property
@@ -164,6 +166,8 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
         self._client = client
         self._areas = areas
         self._attr_unique_id = f"ave_alarm_{entry_id}_global"
+        self._attr_code_arm_required = False
+        self._attr_code_format = None
         self._unregister_callback = None
 
     @property
