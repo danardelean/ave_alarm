@@ -1,0 +1,11 @@
+.progressLoader
+{
+	position: fixed;
+	z-index: 2000;
+	top: 0;
+	left: 0;
+	height: 5px;
+	width: 0;
+	background-color: #29d;
+	display: none;
+}

@@ -1,0 +1,2184 @@
+@CHARSET "ISO-8859-1";
+/*******************/
+/***** COMMON ******/
+/*******************/
+#wrapper.ave.common_tema * 
+{
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+}
+#wrapper.ave.common_tema .slot_wrapper:not(.disabled) .ico
+, #wrapper.ave.common_tema .slot_wrapper:not(.disabled) .text
+, #wrapper.ave.common_tema #head_button_settings2
+, #wrapper.ave.common_tema #mysessionstatus[title='Installatore']
+, #wrapper.ave.common_tema #mysessionstatus[title='PowerUser']
+, #wrapper.ave.common_tema #mysessionstatus[title='User']
+, #wrapper.ave.common_tema #mycloudstatus
+, #wrapper.ave.common_tema #i_name.fnt_az
+, #wrapper.ave.common_tema #i_name.fnt_gr
+, #wrapper.ave.common_tema #i_name.fnt_rd
+, #wrapper.ave.common_tema .footer_area_home #footer_area_b
+, #wrapper.ave.common_tema .head_button.close
+, #wrapper.ave.common_tema #backTitle
+{
+	cursor: pointer;
+}
+#wrapper.ave.common_tema .slot_wrapper .ico
+, #wrapper.ave.common_tema .slot_wrapper .text
+{
+    transition: transform 0.2s ease-in-out;
+}
+#wrapper.ave.common_tema .disableMode2.disabled
+, #wrapper.ave.common_tema .disabled .disableMode2
+{
+	opacity: 0.4;
+}
+#wrapper.ave.common_tema .dyn_slot
+{
+	min-height: 140px;
+	min-width: 150px;
+}
+#wrapper.ave.common_tema .slot .ico
+, #wrapper.ave.common_tema .dyn_slot .ico
+{
+	height: 140px;
+	width: 150px;
+	margin-top: -70px;
+	margin-left: -75px;
+	box-shadow: 0 0 5px rgba(15, 15, 15, 0.2); 
+	border-radius: 20px;
+	background-repeat: no-repeat;
+    background-position: center 20px;
+}
+#wrapper.ave.common_tema .grid_container .text
+, #wrapper.ave.common_tema .dyn_slot .text 
+{
+	width: 150px;
+    left: 50%;
+    margin-left: -75px;
+    margin-top: 13px;
+}
+#wrapper.ave.common_tema .grid_container .notifyIcon
+, #wrapper.ave.common_tema .dyn_slot .notifyIcon
+{
+	margin-top: -74px;
+    margin-left: 53px;
+    width: 37px;
+    height: 37px;
+    line-height: 36px;
+}
+#wrapper.ave.common_tema .grid_container .notifyIcon_imq
+{
+	margin-top: -101px; 
+	margin-left: 53px;
+}
+@media screen and (((orientation: portrait) and (min-width: 460px)) or ((orientation: landscape) and (min-width: 790px)))
+{
+	#wrapper.ave.common_tema .grid_container .notifyIcon
+    , #wrapper.ave.common_tema .dyn_slot .notifyIcon
+    , #wrapper.ave.common_tema .grid_container .notifyIcon_imq
+    {
+    	margin-left: 68px;
+    }
+    #wrapper.ave.common_tema .grid_container .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		width: 190px;
+		margin-left: -95px;
+    }
+    #wrapper.ave.common_tema .grid_container .text
+    , #wrapper.ave.common_tema .dyn_slot .text
+    {
+    	width: 190px;
+		margin-left: -95px;
+    }
+}
+@media (min-width: 1400px) and (min-height: 900px)
+{
+	#wrapper.ave.common_tema .slot .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		background-position: center 30px;
+		background-size: 60px 60px;
+	}
+	#wrapper.ave.common_tema .grid_container .notifyIcon
+    , #wrapper.ave.common_tema .dyn_slot .notifyIcon
+    , #wrapper.ave.common_tema .grid_container .notifyIcon_imq
+    {
+    	margin-left: 125px;
+    }
+    #wrapper.ave.common_tema .grid_container .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		width: 280px;
+		height: 196px;
+		margin-left: -140px;
+    }
+    #wrapper.ave.common_tema .grid_container .text
+    , #wrapper.ave.common_tema .dyn_slot .text
+    {
+    	width: 280px;
+		margin-left: -140px;
+		margin-top: 60px;
+    }
+    #wrapper.ave.common_tema .widget_leaf_home .grid_container .slot
+    {
+    	height: 45%;
+	}
+	#wrapper.ave.common_tema .header_title
+	{
+    	font-size: 20px !important;
+	}
+}
+@media (width: 1280px) and (height: 800px)
+{
+	#wrapper.ave.common_tema .slot .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		background-position: center 30px;
+		background-size: 60px 60px;
+	}
+	#wrapper.ave.common_tema .grid_container .notifyIcon
+	, #wrapper.ave.common_tema .dyn_slot .notifyIcon
+	, #wrapper.ave.common_tema .grid_container .notifyIcon_imq
+	{
+		margin-left: 100px;
+	}
+    #wrapper.ave.common_tema .grid_container .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		width: 240px;
+		height: 170px;
+		margin-left: -120px;
+    }
+    #wrapper.ave.common_tema .grid_container .text
+    , #wrapper.ave.common_tema .dyn_slot .text
+    {
+    	width: 240px;
+		margin-left: -120px;
+		margin-top: 40px;
+    }
+    #wrapper.ave.common_tema .widget_leaf_home .grid_container .slot
+    {
+    	height: 45%;
+	}
+	#wrapper.ave.common_tema .header_title
+	{
+    	font-size: 20px !important;
+	}
+}
+@media (max-width: 740px)
+{
+	#wrapper.ave .footer_area_home .footer_container_btn_area_home.middle
+	{
+		margin-top: 0px;
+	}
+}
+#wrapper.ave.common_tema .bg_red_gr
+{
+	background-color: rgba(255, 255, 255, 0) !important;
+}
+@media screen and (((orientation: landscape) and ((max-height: 459px) or (max-width: 655px))) or ((orientation: portrait) and ((max-height: 750px) or (max-width: 1px))))
+{
+	#wrapper.ave.common_tema .grid_container .ico
+	, #wrapper.ave.common_tema .dyn_slot .ico
+	{
+		height: 90px;
+		width: 140px;
+		margin-top: -40px;
+		margin-left: -70px;
+    	background-size: 25%;
+	    background-position-y: 18%;
+	}
+	#wrapper.ave.common_tema .grid_container .text 
+	, #wrapper.ave.common_tema .dyn_slot .text 
+	{
+		width: 140px;
+		margin-left: -70px;
+    	margin-top: 10px;
+    	font-size: small;
+	}
+	#wrapper.ave.common_tema .grid_container .notifyIcon
+	, #wrapper.ave.common_tema .dyn_slot .notifyIcon
+	{
+	    margin-top: -52px;
+	    margin-left: 52px;
+	    width: 25px;
+	    height: 25px;
+	    line-height: 24px;
+	}
+	#wrapper.ave.common_tema .grid_container .notifyIcon_imq
+	{
+		margin-top: -78px; 
+		margin-left: 40px;
+	}
+	@media ((max-width: 580px) and (max-height: 540px))
+	{
+		#wrapper.ave.common_tema .grid_container .ico
+		, #wrapper.ave.common_tema .dyn_slot .ico
+		{
+			width: 70px;
+			margin-left: -35px;
+		   	background-size: 35%;
+		    background-position-y: 15%;
+		}
+		#wrapper.ave.common_tema .grid_container .text 
+		, #wrapper.ave.common_tema .dyn_slot .text 
+		{
+			width: 70px;
+			margin-left: -35px;
+		}
+		#wrapper.ave.common_tema .grid_container .notifyIcon
+		, #wrapper.ave.common_tema .dyn_slot .notifyIcon
+		{
+		    margin-left: 23px;
+		}
+		#wrapper.ave.common_tema .grid_container .notifyIcon_imq
+		{
+			margin-left: 17px;
+		}
+	}
+}
+#wrapper.ave.common_tema #header-home-page2 .header_left_container 
+{
+	display: none;
+}
+#wrapper.ave.common_tema #header-home-page2 .header_right_container 
+{
+	right: 65%;
+	left: 5px;
+	overflow-x: hidden;
+}
+@media (max-width: 586px)
+{
+    #wrapper.ave.common_tema #header-home-page2 .header_right_container 
+    {
+    	left: 5px !important;
+    	margin-left: 0px !important;
+    	width: auto !important;
+    }
+}
+#wrapper.ave.common_tema #header-home-page2 .header_right_container.moreTitle 
+{
+	right: 70%;
+	left: 5px;
+}
+#wrapper.ave.common_tema #header-home-page2 .header_right_container .head_button
+{
+	right: unset;
+	left: 0px;
+}
+#wrapper.ave.common_tema #header-home-page2 .header_center_container.moreTitle 
+{
+	right: 35%;
+	left: 35%;
+}
+#wrapper.ave.common_tema #backTitle
+{
+	display: inline-block;
+	left: 50px;
+	right: 5px;
+	height: 50px;
+	line-height: 50px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+@media screen and (orientation: portrait)
+{
+	#wrapper.ave.common_tema #backTitle
+	{
+		display: none;
+	}
+}
+#wrapper.ave.common_tema .header_right_container span.icon-elegant-arrow-carrot-left
+{
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+}
+#wrapper.ave.common_tema .header_right_container span.icon-elegant-close
+{
+	display: none;
+}
+#wrapper.ave.common_tema #head_button_settings2 span.icon-elegant-cogs
+{
+	display: none;
+}
+#wrapper.ave.common_tema #icon-elegant-bars
+{
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+#wrapper.ave.common_tema #footer_home2
+{
+	border-top-width: 0px;
+}
+#wrapper.ave.common_tema #gui_header
+, #wrapper.ave.common_tema #gui_body
+, #wrapper.ave.common_tema #gui_footer
+{
+	background-color: rgba(0, 0, 0, 0);	
+}
+#wrapper.ave.common_tema .body_wrapper:not(#main-page)
+, #wrapper.ave.common_tema .widget_login_small
+, #wrapper.ave.common_tema .widget_sideanom
+, #wrapper.ave.common_tema .widget_zone_select_vert
+, #wrapper.ave.common_tema .widget_keypad
+, #wrapper.ave.common_tema .widget_scenery_device_list
+, #wrapper.ave.common_tema .widget_test_device_detail
+{
+	box-shadow: inset 0px 10px 10px -5px rgba(0, 0, 0, 0.25);
+}
+/*, #wrapper.ave.common_tema .widget_zone_select_vert*/
+/*, #wrapper.ave.common_tema .widget_login_small*/
+#wrapper.ave.common_tema .nav_settings_access
+, #wrapper.ave.common_tema .widget_leaf_home
+, #wrapper.ave.common_tema .widget_settings_utilities
+, #wrapper.ave.common_tema .widget_devices_areas
+, #wrapper.ave.common_tema .widget_devices_func
+, #wrapper.ave.common_tema #widget_devices_add
+, #wrapper.ave.common_tema #widget_devices_add_bus
+, #wrapper.ave.common_tema #widget_parconn_lan
+, #wrapper.ave.common_tema .nav_settings_generic
+, #wrapper.ave.common_tema .nav_settings_phone
+, #wrapper.ave.common_tema .nav_settings_telegest
+, #wrapper.ave.common_tema .widget_telegest
+, #wrapper.ave.common_tema .nav_communication
+, #wrapper.ave.common_tema .widget_cloud
+, #wrapper.ave.common_tema .nav_ceninfo
+, #wrapper.ave.common_tema .nav_lang_naz
+, #wrapper.ave.common_tema .summary
+, #wrapper.ave.common_tema .widget_welcome
+, #wrapper.ave.common_tema #widget_device_bus_pair
+, #wrapper.ave.common_tema #widget_iot
+{
+<?php 
+	$arr = @split(":", $_SERVER['HTTP_HOST']);
+	if ($arr[0] == "127.0.0.1")
+	{
+?>
+	background-image: url(public/images/common/empty_body.png);
+<?php
+	}
+	else
+	{
+?>
+	background-image: unset;
+<?php
+	}
+?>
+}
+/*, #wrapper.ave.common_tema .widget_sideanom*/
+/*, #wrapper.ave.common_tema .widget_keypad*/
+/*, #wrapper.ave.common_tema .widget_test_device_detail*/
+/*, #wrapper.ave.common_tema .widget_scenery_device_list*/
+#wrapper.ave.common_tema .widget_test
+, #wrapper.ave.common_tema .widget_confirm
+, #wrapper.ave.common_tema .widget_lang
+, #wrapper.ave.common_tema .widget_stdby
+, #wrapper.ave.common_tema .widget_region
+, #wrapper.ave.common_tema .widget_dtpicker
+, #wrapper.ave.common_tema .widget_new_plant
+, #wrapper.ave.common_tema .widget_typeconn
+, #wrapper.ave.common_tema .widget_parconn
+, #wrapper.ave.common_tema .widget_identifying_areas
+, #wrapper.ave.common_tema .widget_device_wireless
+, #wrapper.ave.common_tema .widget_set_device
+, #wrapper.ave.common_tema #widget_add_other_devices
+, #wrapper.ave.common_tema .widget_mod_device
+, #wrapper.ave.common_tema .widget_device
+, #wrapper.ave.common_tema .widget_add_user
+, #wrapper.ave.common_tema .widget_add_user2
+, #wrapper.ave.common_tema .widget_waiting
+, #wrapper.ave.common_tema .widget_login
+, #wrapper.ave.common_tema .widget_log
+, #wrapper.ave.common_tema .widget_add_other_users
+, #wrapper.ave.common_tema .widget_mod_user
+, #wrapper.ave.common_tema .widget_mod_inst
+, #wrapper.ave.common_tema .widget_mod_email
+, #wrapper.ave.common_tema .widget_parcen
+, #wrapper.ave.common_tema .widget_parvig
+, #wrapper.ave.common_tema .widget_audio
+, #wrapper.ave.common_tema .widget_test_device
+, #wrapper.ave.common_tema .widget_test_device_list
+, #wrapper.ave.common_tema .widget_test_field_meter
+, #wrapper.ave.common_tema .widget_log_rf
+, #wrapper.ave.common_tema .widget_pwd
+, #wrapper.ave.common_tema .widget_add_scenery
+, #wrapper.ave.common_tema .widget_scenery_list
+, #wrapper.ave.common_tema .widget_cmd_device
+, #wrapper.ave.common_tema .widget_utility
+, #wrapper.ave.common_tema .widget_rt_info
+, #wrapper.ave.common_tema .widget_rt_info2
+, #wrapper.ave.common_tema .widget_add_tslot
+{
+<?php 
+	$arr = @split(":", $_SERVER['HTTP_HOST']);
+	if ($arr[0] == "127.0.0.1")
+	{
+?>
+	background-image: url(public/images/common/empty_body.png);
+<?php
+	}
+	else
+	{
+?>
+	background-image: unset;
+<?php
+	}
+?>
+}
+/**widget_zone_select_vert**/
+#wrapper.ave.common_tema #widget_zone_select_vert .zone_select_container .zone_select_item .itembox
+{
+	border-radius: 20px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='1'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_1_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='2'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_2_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='3'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_3_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='4'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_4_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='5'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_5_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='6'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_6_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='7'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_7_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on[data-id='8'] .icon_wrapper .icon .img		{	background-image: url(public/images/common/widget_zone_select_vert/area_8_on.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='1'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_1_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='2'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_2_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='3'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_3_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='4'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_4_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='5'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_5_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='6'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_6_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='7'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_7_off.png);		}
+#wrapper.ave.common_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off[data-id='8'] .icon_wrapper .icon .img	{	background-image: url(public/images/common/widget_zone_select_vert/area_8_off.png);		}
+/*******************/
+#wrapper.ave.common_tema .area_1_stato_1 {background-image: url(public/images/common/area_alarm_ico/area1_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_1 {background-image: url(public/images/common/area_alarm_ico/area2_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_1 {background-image: url(public/images/common/area_alarm_ico/area3_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_1 {background-image: url(public/images/common/area_alarm_ico/area4_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_1 {background-image: url(public/images/common/area_alarm_ico/area5_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_1 {background-image: url(public/images/common/area_alarm_ico/area6_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_1 {background-image: url(public/images/common/area_alarm_ico/area7_alarm_inserimento_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_1 {background-image: url(public/images/common/area_alarm_ico/area8_alarm_inserimento_ico.png);}
+
+#wrapper.ave.common_tema .area_1_stato_2 {background-image: url(public/images/common/area_alarm_ico/area1_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_2 {background-image: url(public/images/common/area_alarm_ico/area2_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_2 {background-image: url(public/images/common/area_alarm_ico/area3_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_2 {background-image: url(public/images/common/area_alarm_ico/area4_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_2 {background-image: url(public/images/common/area_alarm_ico/area5_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_2 {background-image: url(public/images/common/area_alarm_ico/area6_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_2 {background-image: url(public/images/common/area_alarm_ico/area7_alarm_inserito_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_2 {background-image: url(public/images/common/area_alarm_ico/area8_alarm_inserito_ico.png);}
+
+#wrapper.ave.common_tema .area_1_stato_0 {background-image: url(public/images/common/area_alarm_ico/area1_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_0 {background-image: url(public/images/common/area_alarm_ico/area2_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_0 {background-image: url(public/images/common/area_alarm_ico/area3_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_0 {background-image: url(public/images/common/area_alarm_ico/area4_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_0 {background-image: url(public/images/common/area_alarm_ico/area5_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_0 {background-image: url(public/images/common/area_alarm_ico/area6_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_0 {background-image: url(public/images/common/area_alarm_ico/area7_alarm_disinserito_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_0 {background-image: url(public/images/common/area_alarm_ico/area8_alarm_disinserito_ico.png);}
+
+#wrapper.ave.common_tema .area_1_stato_3 {background-image: url(public/images/common/area_alarm_ico/area1_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_3 {background-image: url(public/images/common/area_alarm_ico/area2_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_3 {background-image: url(public/images/common/area_alarm_ico/area3_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_3 {background-image: url(public/images/common/area_alarm_ico/area4_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_3 {background-image: url(public/images/common/area_alarm_ico/area5_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_3 {background-image: url(public/images/common/area_alarm_ico/area6_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_3 {background-image: url(public/images/common/area_alarm_ico/area7_alarm_allarmato_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_3 {background-image: url(public/images/common/area_alarm_ico/area8_alarm_allarmato_ico.png);}
+
+#wrapper.ave.common_tema .area_1_stato_4 {background-image: url(public/images/common/area_alarm_ico/area1_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_4 {background-image: url(public/images/common/area_alarm_ico/area2_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_4 {background-image: url(public/images/common/area_alarm_ico/area3_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_4 {background-image: url(public/images/common/area_alarm_ico/area4_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_4 {background-image: url(public/images/common/area_alarm_ico/area5_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_4 {background-image: url(public/images/common/area_alarm_ico/area6_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_4 {background-image: url(public/images/common/area_alarm_ico/area7_alarm_manomesso_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_4 {background-image: url(public/images/common/area_alarm_ico/area8_alarm_manomesso_ico.png);}
+
+#wrapper.ave.common_tema .area_1_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area1_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_2_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area2_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_3_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area3_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_4_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area4_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_5_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area5_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_6_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area6_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_7_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area7_alarm_unknown_ico.png);}
+#wrapper.ave.common_tema .area_8_stato_unknown {background-image: url(public/images/common/area_alarm_ico/area8_alarm_unknown_ico.png);}
+/*scenari aree*/
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .total_on .icon div
+{
+	background-image: url(public/images/common/area_unselected.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .partial_on .icon div
+{
+	background-image: url(public/images/common/area_unselected.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .total_off .icon div
+{
+	background-image: url(public/images/common/area_unselected_off.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .total_on.selected .icon div
+{
+	background-image: url(public/images/common/area_total_on.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .partial_on.selected .icon div
+{
+	background-image: url(public/images/common/area_partial_on.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .action_selector .total_off.selected .icon div
+{
+	background-image: url(public/images/common/area_total_off.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .areas_selector .icon div
+{
+	background-image: url(public/images/common/area_unselected_little.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .areas_selector.total_on tr.selected .icon div
+{
+	background-image: url(public/images/common/area_total_on_little.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .areas_selector.partial_on tr.selected .icon div
+{
+	background-image: url(public/images/common/area_partial_on_little.png);
+}
+#wrapper.ave.common_tema .widget_zone_select_vert .areas_selector.total_off tr.selected .icon div
+{
+	background-image: url(public/images/common/area_total_off_little.png);
+}
+#wrapper.ave.common_tema .widget_stdby.g_bg_dark
+{
+	background-color: black;
+	color: white;
+}
+#wrapper.ave.common_tema .header_wrapper.ibrb
+{
+	border-bottom-width: 0px;
+}
+#wrapper.ave.common_tema .footer_area_home.ibrt
+{
+	border-top-width: 0px;
+}
+#wrapper.ave.common_tema .widget_audio .audio_container_list .item p
+{
+	font-family: "roboto-light";
+}
+#wrapper.ave.common_tema #mycloudstatus
+{
+	margin: 0px;
+}
+@media (max-width: 586px)
+{
+    #wrapper.ave.common_tema #mycloudstatus
+	{
+		margin-right: 12px;
+	}
+}
+#wrapper.ave.common_tema #mytelegeststatus
+{
+	display: none;
+}
+#wrapper.ave.common_tema #mypolice
+{
+	display: inline-block;
+}
+/*widget_login_small*/
+#wrapper.ave.common_tema .widget_login_small .pin .point_container
+, #wrapper.ave.common_tema .generic_keyboard .pin .point_container
+{
+    left: -110px;
+    right: 0px;
+    width: 220px;
+    height: 60px;
+    margin-left: 50%;
+    bottom: 0px;
+    border-radius: 20px;
+    box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+}
+#wrapper.ave.common_tema .widget_login_small .pin .point_container div.point
+, #wrapper.ave.common_tema .generic_keyboard .pin .point_container div.point
+{
+    top: 16px;
+    border-color: #333;
+}
+#wrapper.ave.common_tema .widget_login_small .pin
+, #wrapper.ave.common_tema .generic_keyboard .pin
+{
+	height: 120px;
+}
+#wrapper.ave.common_tema .widget_login_small .keys
+, #wrapper.ave.common_tema .generic_keyboard .keys
+{
+    max-width: 500px;
+	min-width: 330px;
+	min-height: 220px;
+	max-height: 500px;
+	top: 15%;
+    margin-top: 70px;
+    width: 50%;
+    height: 60%;
+    bottom: 0px;
+    border-radius: 15px;
+    box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+}
+@media (max-height: 400px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys
+	, #wrapper.ave.common_tema .generic_keyboard .keys
+	{
+		top: -8%;	
+	}
+}
+@media (max-width: 675px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys
+	, #wrapper.ave.common_tema .generic_keyboard .keys
+	{
+		margin-left: -165px;
+	}
+}
+@media (min-width: 675px) and (max-width: 1017px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys
+	, #wrapper.ave.common_tema .generic_keyboard .keys
+	{
+		margin-left: -25%;
+	}
+}
+@media (min-width: 1017px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys
+	, #wrapper.ave.common_tema .generic_keyboard .keys
+	{
+		margin-left: -250px;
+	}
+}
+#wrapper.ave.common_tema .widget_keypad .kbd_value .info_num
+{
+	top: 15px;
+}
+#wrapper.ave.common_tema .widget_login_small .pin .label
+, #wrapper.ave.common_tema .generic_keyboard .pin .label
+{
+	top: 15px;
+}
+#wrapper.ave.common_tema .widget_login_small .pin .attempt
+{
+	bottom: -2px;
+}
+#wrapper.ave.common_tema .widget_login_small .keys .key
+, #wrapper.ave.common_tema .generic_keyboard .keys .key
+{
+	width: 28%;
+    height: 21%;
+    margin-right: 0px;
+    margin-left: 4%;
+    margin-top: 16px;
+    border-radius: 12px;
+    border-width: 0px;
+    box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+	/*
+	width: 75px;
+    height: 45px;
+    margin-right: 13px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    border-width: 0px;
+    box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+    */
+}
+@media (max-height: 900px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key
+	{
+		margin-top: 15px;
+	}
+}
+@media (max-height: 800px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key
+	{
+		margin-top: 13px;
+	}
+}
+@media (max-height: 700px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key
+	{
+		margin-top: 10px;
+	}
+}
+@media (max-height: 600px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key
+	{
+		margin-top: 9px;
+	}
+}
+@media (max-height: 500px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key
+	{
+		margin-top: 7px;
+	}
+}
+#wrapper.ave.common_tema .widget_login_small .keys .key .num
+, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+{
+	font-size: 1.5rem;
+	height: 10%;
+	margin-top: 25px;
+	line-height: 0px;
+    /*
+    font-size: 1.5rem;
+    line-height: 45px;
+    */
+}
+#wrapper.ave.common_tema .widget_keypad .kbd_btns
+{
+	top: 0px;
+	height: 100%;
+}
+@media (min-height: 500px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key .num
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+	{
+		margin-top: 30px;
+	}
+}
+@media (min-height: 550px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key .num
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+	{
+		margin-top: 33px;
+	}
+}
+@media (min-height: 650px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key .num
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+	{
+		margin-top: 40px;
+	}
+}
+@media (min-height: 750px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key .num
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+	{
+		margin-top: 45px;
+	}
+}
+@media (min-height: 850px)
+{
+	#wrapper.ave.common_tema .widget_login_small .keys .key .num
+	, #wrapper.ave.common_tema .generic_keyboard .keys .key .num
+	{
+		margin-top: 53px;
+	}
+}
+#wrapper.ave.common_tema .widget_login_small .keys .key .active_click
+, #wrapper.ave.common_tema .generic_keyboard .keys .key .active_click
+{
+	border-radius: 12px;
+}
+@media (max-height: 479px)
+{
+	#wrapper.ave.common_tema .widget_login_small .pin .point_container div.point
+	, #wrapper.ave.common_tema .generic_keyboard .pin .point_container div.point
+	{
+		height: 25px;
+		width: 25px;
+		margin-right: 1px;
+	}
+}
+/***/
+#wrapper.ave.common_tema .widget_sideanom .anom_list_button p
+{
+	margin-top: 10px;
+	line-height: 20px;
+}
+/**/
+#wrapper.ave.common_tema #popwarn_abort
+, #wrapper.ave.common_tema #popwarn_ok
+, #wrapper.ave.common_tema #popwarn_abort2
+, #wrapper.ave.common_tema #popwarn_ok2
+, #wrapper.ave.common_tema #escape_diag
+, #wrapper.ave.common_tema #ok_diag
+{
+	height: 45px;
+	border-radius: 15px;
+	line-height: 36px;
+}
+#wrapper.ave.common_tema #escape_diag
+, #wrapper.ave.common_tema #ok_diag
+{
+	top: 4px;
+}
+#wrapper.ave.common_tema #popwarn_abort
+/*, #wrapper.ave.common_tema #popwarn_abort2*/
+, #wrapper.ave.common_tema #escape_diag
+{
+	left: 5px;
+}
+#wrapper.ave.common_tema #popwarn_ok
+/*, #wrapper.ave.common_tema #popwarn_ok2*/
+, #wrapper.ave.common_tema #ok_diag
+{
+	right: 5px;
+}
+#wrapper.ave.common_tema #home.swap #gui_body
+{
+	top: 120;
+	bottom: 0px;
+}
+#wrapper.ave.common_tema #home.swap #gui_footer
+{
+	top: 60px;
+	bottom: unset;
+}
+#wrapper.ave.common_tema #footer-home-page #footer_area_a
+{
+	left: initial;
+	right: 0%;
+	width: 60px;
+}
+#wrapper.ave.common_tema #footer-home-page #footer_area_b
+{
+	margin-left: initial;
+	left: 0%;
+	width: 214px;
+	top: 3px;
+	height: 31px;
+	border-radius: 20px;
+	box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+}
+@media (min-width: 725px)
+{
+	#wrapper.ave.common_tema #footer-home-page #footer_area_b
+	{
+		margin-left: 47px;
+	}
+}
+#wrapper.ave.common_tema #footer-home-page #footer_area_c
+{
+	right: initial;
+	left: 240px;
+    right: 60px;
+    width: initial;
+    min-width: 100px;
+}
+#wrapper.ave.common_tema .footer_wrapper .area-items .area_item
+{
+	height: 25px;
+	width: 25px;
+	background-size: 100%;
+    margin-left: 3px;
+    margin-top: 3px;
+}
+@media screen and (orientation: landscape) and (min-width: 625px)
+{
+	#wrapper.ave.common_tema #myrtc2
+	{
+		text-indent: -170px;
+	}
+}
+#wrapper.ave.common_tema #myrtc2
+{
+	top: 9px;
+}
+#wrapper.ave.common_tema #myrtc
+, #wrapper.ave.common_tema #myrtc2
+{
+	font-size: 1.25rem;
+}
+#wrapper.ave.common_tema #gui_footer
+{
+	height: 62px
+}
+@media screen and (orientation: portrait)
+{
+	#wrapper.ave.common_tema #footer-home-page #footer_area_b
+	{
+		left: 50%;
+		margin-left: -107px;
+	}
+	#wrapper.ave.common_tema #myrtc2
+	{
+		top: 39px;
+	}
+	#wrapper.ave.common_tema #footer-home-page #footer_area_c
+	{
+		left: 60px;
+		display: none !important;
+	}
+}
+@media (max-width: 550px)
+{
+	#wrapper.ave.common_tema #myrtc2
+	{
+		top: 42px;
+	}
+}
+#wrapper.ave.common_tema #i_name
+{
+	background-image: url(common/logoAVE_white.png);
+	height: 50px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 70px;
+}
+#wrapper.ave.common_tema #i_name.fnt_az
+{
+	background-image: url(common/logoAVE_blue.png);
+}
+#wrapper.ave.common_tema #i_name.fnt_gr
+{
+	background-image:  url(common/logoAVE_green.png);
+}
+#wrapper.ave.common_tema #i_name.fnt_rd
+{
+	background-image:  url(common/logoAVE_red.png);
+}
+#wrapper.ave.common_tema #header-home-page.scuro
+{
+	background-color: black;
+}
+#wrapper.ave.common_tema #header-home-page.scuro #mybatinfo
+, #wrapper.ave.common_tema #header-home-page.scuro #mygsminfo
+, #wrapper.ave.common_tema #header-home-page #mybatinfo
+{
+	color: rgba(255, 255, 255, 0.6);
+}
+#wrapper.ave.common_tema #widget_log_entire .p_text
+{
+	text-shadow: 1px 1px 2px black;
+}
+#wrapper.ave.common_tema .sumMsgText
+{
+	color: white;
+}
+#wrapper.ave.common_tema .widget_tvcc .tvcc
+{
+	background-color: rgba(0, 0, 0, 0);
+}
+#wrapper.ave.common_tema .header_container.header_right_container .mycontainer
+{
+	right: 0px;
+}
+#wrapper.ave.common_tema .widget_popwarn
+, #wrapper.ave.common_tema .widget_diag
+{
+    border-radius: 20px;
+    overflow: hidden;
+}
+#wrapper.ave.common_tema .home .JSdialog[data-curpage='widget_login_small']
+, #wrapper.ave.common_tema .home .JSdialog2[data-curpage='widget_keypad']
+, #wrapper.ave.common_tema .home .JSwait
+{
+	bottom: 0px;
+}
+#wrapper.ave.common_tema .widget_login_small .keys .key#pin_cancel .inner
+, #wrapper.ave.common_tema .generic_keyboard .keys .key#num_cancel .inner
+{
+	background-size: 35px;
+}
+#wrapper.ave.common_tema .header_title
+{
+	font-size: 16px;
+}
+#wrapper.ave.common_tema #exit_ico
+{
+	background-image: url(arrow_exit.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 50px;
+	height: 50px;
+	left: 0px;
+}
+#wrapper.ave.common_tema #exit_lbl
+{
+	font-size: 18px;
+	line-height: 50px;
+	color: white;
+	left: 39px;
+}
+#wrapper.ave.common_tema #head_button_settings2.exit_mode
+{
+	left: 80px;
+}
+#wrapper.ave.common_tema .header_container.header_left_container .mycontainer.exit_mode
+{
+	left: 130px;
+}
+#wrapper.ave.common_tema #exit_from_home
+{
+	width: 85px;
+}
+@media (max-width: 500px)
+{
+	#wrapper.ave.common_tema #exit_lbl
+	{
+		display: none;
+	}
+	#wrapper.ave.common_tema #head_button_settings2.exit_mode
+	{
+		left: 40px;
+	}
+	#wrapper.ave.common_tema .header_container.header_left_container .mycontainer.exit_mode
+	{
+		left: 90px;
+	}
+	#wrapper.ave.common_tema #exit_from_home
+	{
+		width: 50px;
+	}
+}
+@media (max-width: 586px)
+{
+    #wrapper.ave.common_tema .header_center_container.exit_mode
+    {
+		left: 130px !important;
+		right: 130px !important;
+    }
+}
+@media (max-width: 880px)
+{
+    #wrapper.ave.common_tema .exit_mode #mypowstatus
+    , #wrapper.ave.common_tema .exit_mode #mybatstatus
+    , #wrapper.ave.common_tema .exit_mode #mybatinfo
+    {
+        display: none;
+    }
+}
+#wrapper.ave.common_tema .footer_area_home .footer_container_btn_area_home.left > *
+, #wrapper.ave.common_tema #header_center_container_stdby .header_container_btn_area_home.left > * 
+{
+    padding-left: 0px;
+    border-radius: 20px;
+    width: 50px;
+    height: 31px;
+    margin-top: 3px;
+    box-shadow: 0 0 5px rgba(15, 15, 15, 0.2);
+}
+#wrapper.ave.common_tema #t_exit
+{
+	text-align: center;
+}
+/*******************/
+/*******************/
+/****** DARK *******/
+/*******************/
+#wrapper.ave.dark_tema .bg_azure_gr
+{
+	background-color: rgb(210, 160, 65) !important;
+}
+#wrapper.ave.dark_tema .g_bg_dark
+{
+	background-color: rgb(48, 48, 48);
+}
+#wrapper.ave.dark_tema .brb
+, #wrapper.ave.dark_tema .ibrb
+{
+    border-bottom-color: #333333;
+}
+#wrapper.ave.dark_tema .brr
+, #wrapper.ave.dark_tema .ibrr
+{
+	border-right-color: #333333;
+}
+#wrapper.ave.dark_tema .brt
+, #wrapper.ave.dark_tema .ibrt
+{
+	border-top-color: #333333;
+}
+#wrapper.ave.dark_tema .brl
+, #wrapper.ave.dark_tema .ibrl
+{
+	border-left-color: #333333;
+}
+/**/
+#wrapper.ave.dark_tema
+, #wrapper.ave.dark_tema .widget_login_small
+, #wrapper.ave.dark_tema .widget_sideanom
+, #wrapper.ave.dark_tema .widget_zone_select_vert
+, #wrapper.ave.dark_tema .widget_keypad
+, #wrapper.ave.dark_tema .widget_scenery_device_list
+, #wrapper.ave.dark_tema .widget_test_device_detail
+, #wrapper.ave.dark_tema .widget_cmd_device_cen
+, #wrapper.ave.dark_tema .widget_thermostat_device
+{
+<?php 
+	$arr = @split(":", $_SERVER['HTTP_HOST']);
+	if ($arr[0] == "127.0.0.1")
+	{
+?>
+	background-image: url(public/images/dark/fix_sf_body.jpg);
+<?php
+	}
+	else
+	{
+?>
+	background-image: url(public/images/dark/mobi_sf_body.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+<?php
+	}
+?>
+}
+/**widget_zone_select_vert**/
+#wrapper.ave.dark_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on .itembox
+{
+	border: 2px solid #716954;
+	background-color: #333;
+}
+#wrapper.ave.dark_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off .itembox
+{
+	border-width: 0px;
+	background-color: rgba(20, 20, 20, 0.8);
+}
+/**/
+#wrapper.ave.dark_tema .grid_container .slot .ico 
+, #wrapper.ave.dark_tema .dyn_slot .ico
+{
+	background-color: #333333;
+}
+/**widget_leaf_home**/
+#wrapper.ave.dark_tema .widget_leaf_home .ico1 { background-image: url(public/images/dark/widget_leaf_home/Lock_Grey.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico1.S00120 { background-image: url(public/images/dark/area_total_on.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico1.S00121 { background-image: url(public/images/dark/area_total_off.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico1.S00122 { background-image: url(public/images/dark/area_partial_on.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico1.S00127 { background-image: url(public/images/dark/area_alarmed.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico2 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico3 { background-image: url(public/images/dark/widget_leaf_home/Scenari.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico4 { background-image: url(public/images/dark/widget_leaf_home/User.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico5 { background-image: url(public/images/dark/widget_leaf_home/IP_Cam.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico6 { background-image: url(public/images/dark/widget_leaf_home/Test.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico7 { background-image: url(public/images/dark/widget_leaf_home/Communications.png);}
+#wrapper.ave.dark_tema .widget_leaf_home .ico8 { background-image: url(public/images/dark/widget_leaf_home/Settings.png);}
+/**widget_settings_utilities**/
+#wrapper.ave.dark_tema .widget_settings_utilities .ico1 { background-image: url(public/images/dark/widget_settings_utilities/DevicesAreas.png); }
+#wrapper.ave.dark_tema .widget_settings_utilities .ico2 { background-image: url(public/images/dark/widget_settings_utilities/Phone.png); }
+#wrapper.ave.dark_tema .widget_settings_utilities .ico3 { background-image: url(public/images/dark/widget_settings_utilities/Generalsettings.png); }
+#wrapper.ave.dark_tema .widget_settings_utilities .ico4 { background-image: url(public/images/dark/widget_settings_utilities/RemoteSupport.png); }
+#wrapper.ave.dark_tema .widget_settings_utilities .ico5 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+#wrapper.ave.dark_tema .widget_settings_utilities .ico6 { background-image: url(public/images/dark/widget_leaf_home/Test.png);}
+#wrapper.ave.dark_tema .widget_settings_utilities .ico7 { background-image: url(public/images/dark/widget_leaf_home/Communications.png);}
+#wrapper.ave.dark_tema .widget_settings_utilities .ico8 { background-image: url(public/images/dark/widget_leaf_home/User.png);}
+/**widget_devices_areas**/
+#wrapper.ave.dark_tema .widget_devices_areas .ico1 { background-image: url(public/images/dark/widget_devices_areas/Aree.png); }
+#wrapper.ave.dark_tema .widget_devices_areas .ico2 { background-image: url(public/images/dark/widget_devices_areas/Devices.png); }
+#wrapper.ave.dark_tema .widget_devices_areas .ico3 { background-image: url(public/images/dark/widget_devices_areas/Iot.png); }
+/**nav_settings_phone**/
+#wrapper.ave.dark_tema .nav_settings_phone .ico1 { background-image: url(public/images/dark/nav_settings_phone/Mic.png); }
+#wrapper.ave.dark_tema .nav_settings_phone .ico2 { background-image: url(public/images/dark/nav_settings_phone/Credit.png); }
+/**widget_audio**/
+#wrapper.ave.dark_tema .widget_audio .ico1 { background-image: url(public/images/dark/widget_audio/EventsBlue.png); }
+#wrapper.ave.dark_tema .widget_audio .ico2 { background-image: url(public/images/dark/widget_audio/Impianto.png); }
+#wrapper.ave.dark_tema .widget_audio .ico3 { background-image: url(public/images/dark/widget_audio/Aree.png); }
+#wrapper.ave.dark_tema .widget_audio .ico4 { background-image: url(public/images/dark/widget_audio/Devices.png); }
+/**nav_settings_generic**/
+#wrapper.ave.dark_tema .nav_settings_generic .ico1 { background-image: url(public/images/dark/nav_settings_generic/DateTime.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico2 { background-image: url(public/images/dark/nav_settings_generic/World.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico3 { background-image: url(public/images/dark/nav_settings_generic/Impianto.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico4 { background-image: url(public/images/dark/nav_settings_generic/Scenari.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico5 { background-image: url(public/images/dark/nav_settings_generic/CentralUnitParamaters.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico6 { background-image: url(public/images/dark/nav_settings_generic/Ceninfo.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico7 { background-image: url(public/images/dark/nav_settings_generic/Update.png);}
+#wrapper.ave.dark_tema .nav_settings_generic .ico8 { background-image: url(public/images/dark/nav_settings_generic/Index.png);}
+/**nav_lang_naz**/
+#wrapper.ave.dark_tema .nav_lang_naz .ico1 { background-image: url(public/images/dark/nav_lang_naz/World.png); }
+#wrapper.ave.dark_tema .nav_lang_naz .ico2 { background-image: url(public/images/dark/nav_lang_naz/Regione.png); }
+/**nav_settings_telegest**/
+#wrapper.ave.dark_tema .nav_settings_telegest .ico1 { background-image: url(public/images/dark/nav_settings_telegest/Gestione.png); }
+#wrapper.ave.dark_tema .nav_settings_telegest .ico2 { background-image: url(public/images/dark/nav_settings_telegest/Condivisione.png); }
+/**nav_communication**/
+#wrapper.ave.dark_tema .nav_communication .ico1 { background-image: url(public/images/dark/nav_communication/WiFi.png);}
+#wrapper.ave.dark_tema .nav_communication .ico2 { background-image: url(public/images/dark/nav_communication/Mail.png);}
+#wrapper.ave.dark_tema .nav_communication .ico3 { background-image: url(public/images/dark/nav_communication/Cloud.png);}
+#wrapper.ave.dark_tema .nav_communication .ico4 { background-image: url(public/images/dark/nav_communication/OtherCommunications.png);}
+/**widget_scenery_list**/
+#wrapper.ave.dark_tema .widget_scenery_list .ico1 { background-image: url(public/images/dark/widget_scenery_list/Scenari.png); }
+#wrapper.ave.dark_tema .widget_scenery_list .scenery_edit .ico1 { background-image: url(public/images/dark/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.dark_tema .widget_scenery_list .scenery_edit_iot .ico1 { background-image: url(public/images/dark/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.dark_tema .widget_scenery_list .scenery_iot .ico1 { background-image: url(public/images/dark/nav_settings_generic/ScenaryImpostaIot.png); }
+/**widget_test_device**/
+#wrapper.ave.dark_tema .widget_test_device .ico1 { background-image: url(public/images/dark/widget_test_device/FieldMeter.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico2 { background-image: url(public/images/dark/widget_test_device/Devices.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico3 { background-image: url(public/images/dark/widget_test_device/Phone.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico4 { background-image: url(public/images/dark/widget_test_device/Sounder.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico5 { background-image: url(public/images/dark/widget_test_device/IP_Cam.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico6 { background-image: url(public/images/dark/widget_test_device/Output.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico7 { background-image: url(public/images/dark/widget_test_device/Monitor.png); }
+#wrapper.ave.dark_tema .widget_test_device .ico8 { background-image: url(public/images/dark/widget_test_device/Wired.png); }
+/**widget_telegest**/
+#wrapper.ave.dark_tema .widget_telegest .ico1 { background-image: url(public/images/dark/widget_telegest/CondivisioneST.png); }
+#wrapper.ave.dark_tema .widget_telegest .ico1.share_status_on { background-image: url(public/images/dark/widget_telegest/CondivisioneST_on.png); }
+#wrapper.ave.dark_tema .widget_telegest .ico1.share_status_off { background-image: url(public/images/dark/widget_telegest/CondivisioneST_off.png); }
+/**widget_devices_add**/
+#wrapper.ave.dark_tema #widget_devices_add .ico1 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+#wrapper.ave.dark_tema #widget_devices_add .ico2 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+#wrapper.ave.dark_tema #widget_devices_add .ico3 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+/**widget_devices_add_bus**/
+#wrapper.ave.dark_tema #widget_devices_add_bus .ico1 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+#wrapper.ave.dark_tema #widget_devices_add_bus .ico2 { background-image: url(public/images/dark/widget_leaf_home/Events.png);}
+/**nav_settings_access**/
+#wrapper.ave.dark_tema .nav_settings_access .ico1 { background-image: url(public/images/dark/nav_settings_access/Settings.png);}
+#wrapper.ave.dark_tema .nav_settings_access .ico2 { background-image: url(public/images/dark/nav_settings_access/Installatore.png); }
+/**summary**/
+#wrapper.ave.dark_tema .summary .ico1 { background-image: url(public/images/dark/summary/World.png); }
+#wrapper.ave.dark_tema .summary .ico2 { background-image: url(public/images/dark/summary/Impianto.png); }
+#wrapper.ave.dark_tema .summary .ico3 { background-image: url(public/images/dark/summary/Aree.png); }
+#wrapper.ave.dark_tema .summary .ico4 { background-image: url(public/images/dark/summary/Devices.png); }
+#wrapper.ave.dark_tema .summary .ico5 { background-image: url(public/images/dark/summary/User.png); }
+#wrapper.ave.dark_tema .summary .ico6 { background-image: url(public/images/dark/summary/Mic.png); }
+#wrapper.ave.dark_tema .summary .ico7 { background-image: url(public/images/dark/summary/Communications.png); }
+#wrapper.ave.dark_tema .summary .ico8 { background-image: url(public/images/dark/summary/Scenari.png); }
+#wrapper.ave.dark_tema .summary .ico9 { background-image: url(public/images/dark/summary/CentralUnitParamaters.png); }
+#wrapper.ave.dark_tema .summary .ico10 { background-image: url(public/images/dark/summary/Installatore.png); }
+/******/
+#wrapper.ave.dark_tema #myrtc2
+{
+	color: white;
+}
+#wrapper.ave.dark_tema #JStoast.bg_red_gr
+{
+	background-color: rgba(0, 0, 0, 1) !important;
+}
+/***/
+#wrapper.ave.dark_tema .widget_login_small .keys
+, #wrapper.ave.dark_tema .generic_keyboard .keys
+{
+    background-color: #333;
+}
+#wrapper.ave.dark_tema .widget_login_small .keys .key
+, #wrapper.ave.dark_tema .generic_keyboard .keys .key
+{
+    background-color: #D6A938;
+}
+#wrapper.ave.dark_tema .widget_login_small .keys .key .num
+, #wrapper.ave.dark_tema .generic_keyboard .keys .key .num
+{
+	color: #333;
+}
+#wrapper.ave.dark_tema .widget_login_small .keys .key#pin_cancel .inner
+, #wrapper.ave.dark_tema .generic_keyboard .keys .key#num_cancel .inner
+{
+	background-image: url(dark/cancel.png);
+}
+#wrapper.ave.dark_tema .widget_login_small .pin .point_container
+, #wrapper.ave.dark_tema .generic_keyboard .pin .point_container
+{
+	background-color: #D6A938;
+}
+#wrapper.ave.dark_tema .point.bg_clear
+{
+	background-color: #333;
+}
+#wrapper.ave.dark_tema .widget_login_small .pin .attempt
+{
+	color: #333;
+}
+#wrapper.ave.dark_tema #popwarn_abort
+, #wrapper.ave.dark_tema #popwarn_ok
+, #wrapper.ave.dark_tema #popwarn_abort2
+, #wrapper.ave.dark_tema #popwarn_ok2
+, #wrapper.ave.dark_tema #escape_diag
+, #wrapper.ave.dark_tema #ok_diag
+{
+	background-color: #D6A938;
+}
+#wrapper.ave.dark_tema #footer-home-page #footer_area_b
+{
+	background-color: #333333;
+}
+#wrapper.ave.dark_tema #icon-elegant-bars
+{
+	background-image: url(dark/bars.png);
+}
+#wrapper.ave.dark_tema .footer_area_home .footer_container_btn_area_home.left > *
+, #wrapper.ave.dark_tema #header_center_container_stdby .header_container_btn_area_home.left > * 
+{
+    background-color: #333333;
+}
+/***/
+/*******************/
+/****** LIGHT ******/
+/*******************/
+#wrapper.ave.light_tema
+{
+	color: rgb(0, 0, 0);
+}
+#wrapper.ave.light_tema .item_tag
+{
+	color: rgb(0, 0, 0);
+}
+#wrapper.ave.light_tema .tt_selector
+{
+	color: rgb(0, 0, 0);
+}
+#wrapper.ave.light_tema .sl_selector
+{
+	color: rgb(0, 0, 0);
+}
+.global_items_container .sound .sound_btn[data-checked='0']
+{
+	color: rgb(0, 0, 0, 0.4);
+}
+.global_items_container .sound .sound_btn[data-checked='1']
+{
+	color: rgb(0, 0, 0);
+}
+#wrapper.ave.light_tema .grid_container .notifyIcon
+{
+	color: rgb(255, 255, 255);
+}
+#wrapper.ave.light_tema .fnt_gr
+{
+	color: green !important;
+}
+#wrapper.ave.light_tema .bg_azure_gr
+{
+	background-color: rgb(0, 165, 180) !important;
+}
+#wrapper.ave.light_tema .g_bg_dark
+{
+	background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.light_tema .brb
+, #wrapper.ave.light_tema .ibrb
+{
+    border-bottom-color: black;
+}
+#wrapper.ave.light_tema .brr
+, #wrapper.ave.light_tema .ibrr
+{
+	border-right-color: black;
+}
+#wrapper.ave.light_tema .brt
+, #wrapper.ave.light_tema .ibrt
+{
+	border-top-color: black;
+}
+#wrapper.ave.light_tema .brl
+, #wrapper.ave.light_tema .ibrl
+{
+	border-left-color: black;
+}
+#wrapper.ave.light_tema .dyn_title
+{
+	color: black;
+}
+#wrapper.ave.light_tema .item_input
+{
+	color: black;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+#wrapper.ave.light_tema .button_dot
+{
+	background-color: black;
+}
+#wrapper.ave.light_tema .switcher.off
+{
+    background-color: lightgrey;
+}
+#wrapper.ave.light_tema .switcher.on
+{
+    background-color: rgb(0, 165, 180);
+}
+#wrapper.ave.light_tema .selector_container
+{
+	background-image: url(light/three_lines.png);
+}
+#wrapper.ave.light_tema .widget_diag
+{
+	background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.light_tema .header_diag
+{
+	background-color: rgb(160, 160, 160);
+}
+#wrapper.ave.light_tema .item_value_v
+, #wrapper.ave.light_tema .item_value
+, #wrapper.ave.light_tema .item_value_c
+{
+	color: black;
+	background-color: rgba(0, 0, 0, 0.1);
+	line-height: 50px;
+}
+#wrapper.ave.light_tema .global_items_container .global_item .bottom_comand
+{
+	color: rgba(0, 0, 0, 0.9);
+}
+#wrapper.ave.light_tema .slot_picker .value p
+{
+	color: black;
+}
+#wrapper.ave.light_tema .popwarn_header
+{
+	background-color: rgba(244, 243, 241);
+}
+/**/
+#wrapper.ave.light_tema
+, #wrapper.ave.light_tema .widget_login_small
+, #wrapper.ave.light_tema .widget_sideanom
+, #wrapper.ave.light_tema .widget_zone_select_vert
+, #wrapper.ave.light_tema .widget_keypad
+, #wrapper.ave.light_tema .widget_scenery_device_list
+, #wrapper.ave.light_tema .widget_test_device_detail
+, #wrapper.ave.light_tema .widget_cmd_device_cen
+, #wrapper.ave.light_tema .widget_thermostat_device
+{
+<?php 
+	$arr = @split(":", $_SERVER['HTTP_HOST']);
+	if ($arr[0] == "127.0.0.1")
+	{
+?>
+	background-image: url(public/images/light/fix_sf_body.jpg);
+<?php
+	}
+	else
+	{
+?>
+	background-image: url(public/images/light/mobi_sf_body.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+<?php
+	}
+?>
+}
+/**/
+#wrapper.ave.light_tema .bg_bla
+{
+	background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.light_tema .c_wsmt
+{
+	color: rgba(0, 0, 0, 0.4);
+}
+/**/
+#wrapper.ave.light_tema .grid_container .slot .ico 
+, #wrapper.ave.light_tema .dyn_slot .ico
+{
+	background-color: #FFFFFF;
+}
+/**widget_leaf_home**/
+#wrapper.ave.light_tema .widget_leaf_home .ico1 { background-image: url(public/images/light/widget_leaf_home/Lock_Grey.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico1.S00120 { background-image: url(public/images/light/area_total_on.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico1.S00121 { background-image: url(public/images/light/area_total_off.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico1.S00122 { background-image: url(public/images/light/area_partial_on.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico1.S00127 { background-image: url(public/images/light/area_alarmed.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico2 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico3 { background-image: url(public/images/light/widget_leaf_home/Scenari.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico4 { background-image: url(public/images/light/widget_leaf_home/User.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico5 { background-image: url(public/images/light/widget_leaf_home/IP_Cam.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico6 { background-image: url(public/images/light/widget_leaf_home/Test.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico7 { background-image: url(public/images/light/widget_leaf_home/Communications.png);}
+#wrapper.ave.light_tema .widget_leaf_home .ico8 { background-image: url(public/images/light/widget_leaf_home/Settings.png);}
+/**widget_settings_utilities**/
+#wrapper.ave.light_tema .widget_settings_utilities .ico1 { background-image: url(public/images/light/widget_settings_utilities/DevicesAreas.png); }
+#wrapper.ave.light_tema .widget_settings_utilities .ico2 { background-image: url(public/images/light/widget_settings_utilities/Phone.png); }
+#wrapper.ave.light_tema .widget_settings_utilities .ico3 { background-image: url(public/images/light/widget_settings_utilities/Generalsettings.png); }
+#wrapper.ave.light_tema .widget_settings_utilities .ico4 { background-image: url(public/images/light/widget_settings_utilities/RemoteSupport.png); }
+#wrapper.ave.light_tema .widget_settings_utilities .ico5 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+#wrapper.ave.light_tema .widget_settings_utilities .ico6 { background-image: url(public/images/light/widget_leaf_home/Test.png);}
+#wrapper.ave.light_tema .widget_settings_utilities .ico7 { background-image: url(public/images/light/widget_leaf_home/Communications.png);}
+#wrapper.ave.light_tema .widget_settings_utilities .ico8 { background-image: url(public/images/light/widget_leaf_home/User.png);}
+/**widget_devices_areas**/
+#wrapper.ave.light_tema .widget_devices_areas .ico1 { background-image: url(public/images/light/widget_devices_areas/Aree.png); }
+#wrapper.ave.light_tema .widget_devices_areas .ico2 { background-image: url(public/images/light/widget_devices_areas/Devices.png); }
+#wrapper.ave.light_tema .widget_devices_areas .ico3 { background-image: url(public/images/light/widget_devices_areas/Iot.png); }
+/**nav_settings_phone**/
+#wrapper.ave.light_tema .nav_settings_phone .ico1 { background-image: url(public/images/light/nav_settings_phone/Mic.png); }
+#wrapper.ave.light_tema .nav_settings_phone .ico2 { background-image: url(public/images/light/nav_settings_phone/Credit.png); }
+/**widget_audio**/
+#wrapper.ave.light_tema .widget_audio .ico1 { background-image: url(public/images/light/widget_audio/EventsBlue.png); }
+#wrapper.ave.light_tema .widget_audio .ico2 { background-image: url(public/images/light/widget_audio/Impianto.png); }
+#wrapper.ave.light_tema .widget_audio .ico3 { background-image: url(public/images/light/widget_audio/Aree.png); }
+#wrapper.ave.light_tema .widget_audio .ico4 { background-image: url(public/images/light/widget_audio/Devices.png); }
+/**nav_settings_generic**/
+#wrapper.ave.light_tema .nav_settings_generic .ico1 { background-image: url(public/images/light/nav_settings_generic/DateTime.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico2 { background-image: url(public/images/light/nav_settings_generic/World.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico3 { background-image: url(public/images/light/nav_settings_generic/Impianto.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico4 { background-image: url(public/images/light/nav_settings_generic/Scenari.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico5 { background-image: url(public/images/light/nav_settings_generic/CentralUnitParamaters.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico6 { background-image: url(public/images/light/nav_settings_generic/Ceninfo.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico7 { background-image: url(public/images/light/nav_settings_generic/Update.png);}
+#wrapper.ave.light_tema .nav_settings_generic .ico8 { background-image: url(public/images/light/nav_settings_generic/Index.png);}
+/**nav_lang_naz**/
+#wrapper.ave.light_tema .nav_lang_naz .ico1 { background-image: url(public/images/light/nav_lang_naz/World.png); }
+#wrapper.ave.light_tema .nav_lang_naz .ico2 { background-image: url(public/images/light/nav_lang_naz/Regione.png); }
+/**nav_settings_telegest**/
+#wrapper.ave.light_tema .nav_settings_telegest .ico1 { background-image: url(public/images/light/nav_settings_telegest/Gestione.png); }
+#wrapper.ave.light_tema .nav_settings_telegest .ico2 { background-image: url(public/images/light/nav_settings_telegest/Condivisione.png); }
+/**nav_communication**/
+#wrapper.ave.light_tema .nav_communication .ico1 { background-image: url(public/images/light/nav_communication/WiFi.png);}
+#wrapper.ave.light_tema .nav_communication .ico2 { background-image: url(public/images/light/nav_communication/Mail.png);}
+#wrapper.ave.light_tema .nav_communication .ico3 { background-image: url(public/images/light/nav_communication/Cloud.png);}
+#wrapper.ave.light_tema .nav_communication .ico4 { background-image: url(public/images/light/nav_communication/OtherCommunications.png);}
+/**widget_scenery_list**/
+#wrapper.ave.light_tema .widget_scenery_list .ico1 { background-image: url(public/images/light/widget_scenery_list/Scenari.png); }
+#wrapper.ave.light_tema .widget_scenery_list .scenery_edit .ico1 { background-image: url(public/images/light/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.light_tema .widget_scenery_list .scenery_edit_iot .ico1 { background-image: url(public/images/light/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.light_tema .widget_scenery_list .scenery_iot .ico1 { background-image: url(public/images/light/nav_settings_generic/ScenaryImpostaIot.png); }
+/**widget_test_device**/
+#wrapper.ave.light_tema .widget_test_device .ico1 { background-image: url(public/images/light/widget_test_device/FieldMeter.png); }
+#wrapper.ave.light_tema .widget_test_device .ico2 { background-image: url(public/images/light/widget_test_device/Devices.png); }
+#wrapper.ave.light_tema .widget_test_device .ico3 { background-image: url(public/images/light/widget_test_device/Phone.png); }
+#wrapper.ave.light_tema .widget_test_device .ico4 { background-image: url(public/images/light/widget_test_device/Sounder.png); }
+#wrapper.ave.light_tema .widget_test_device .ico5 { background-image: url(public/images/light/widget_test_device/IP_Cam.png); }
+#wrapper.ave.light_tema .widget_test_device .ico6 { background-image: url(public/images/light/widget_test_device/Output.png); }
+#wrapper.ave.light_tema .widget_test_device .ico7 { background-image: url(public/images/light/widget_test_device/Monitor.png); }
+#wrapper.ave.light_tema .widget_test_device .ico8 { background-image: url(public/images/light/widget_test_device/Wired.png); }
+/**widget_telegest**/
+#wrapper.ave.light_tema .widget_telegest .ico1 { background-image: url(public/images/light/widget_telegest/CondivisioneST.png); }
+#wrapper.ave.light_tema .widget_telegest .ico1.share_status_on { background-image: url(public/images/light/widget_telegest/CondivisioneST_on.png); }
+#wrapper.ave.light_tema .widget_telegest .ico1.share_status_off { background-image: url(public/images/light/widget_telegest/CondivisioneST_off.png); }
+/**widget_devices_add**/
+#wrapper.ave.light_tema #widget_devices_add .ico1 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+#wrapper.ave.light_tema #widget_devices_add .ico2 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+#wrapper.ave.light_tema #widget_devices_add .ico3 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+/**widget_devices_add_bus**/
+#wrapper.ave.light_tema #widget_devices_add_bus .ico1 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+#wrapper.ave.light_tema #widget_devices_add_bus .ico2 { background-image: url(public/images/light/widget_leaf_home/Events.png);}
+/**nav_settings_access**/
+#wrapper.ave.light_tema .nav_settings_access .ico1 { background-image: url(public/images/light/nav_settings_access/Settings.png);}
+#wrapper.ave.light_tema .nav_settings_access .ico2 { background-image: url(public/images/light/nav_settings_access/Installatore.png); }
+/**summary**/
+#wrapper.ave.light_tema .summary .ico1 { background-image: url(public/images/light/summary/World.png); }
+#wrapper.ave.light_tema .summary .ico2 { background-image: url(public/images/light/summary/Impianto.png); }
+#wrapper.ave.light_tema .summary .ico3 { background-image: url(public/images/light/summary/Aree.png); }
+#wrapper.ave.light_tema .summary .ico4 { background-image: url(public/images/light/summary/Devices.png); }
+#wrapper.ave.light_tema .summary .ico5 { background-image: url(public/images/light/summary/User.png); }
+#wrapper.ave.light_tema .summary .ico6 { background-image: url(public/images/light/summary/Mic.png); }
+#wrapper.ave.light_tema .summary .ico7 { background-image: url(public/images/light/summary/Communications.png); }
+#wrapper.ave.light_tema .summary .ico8 { background-image: url(public/images/light/summary/Scenari.png); }
+#wrapper.ave.light_tema .summary .ico9 { background-image: url(public/images/light/summary/CentralUnitParamaters.png); }
+#wrapper.ave.light_tema .summary .ico10 { background-image: url(public/images/light/summary/Installatore.png); }
+/***/
+#wrapper.ave.teal_tema #myrtc2
+{
+	color: black;
+}
+/**keypad**/
+#wrapper.ave.light_tema .widget_login_small .keys .key
+, #wrapper.ave.light_tema .generic_keyboard .keys .key
+{
+	background-color: rgb(0, 165, 180);
+	color: white;
+}
+#wrapper.ave.light_tema .point.bg_clear
+{
+	background-color: rgb(0, 165, 180);
+}
+#wrapper.ave.light_tema .widget_login_small .pin .point_container div.point
+{
+	border-color: #99dbe1;
+}
+/***/
+#wrapper.ave.light_tema #div_bus_pair_images_container .div_bus_pair_img:nth-child(2n + 1)		{	background-image: url(light/bus_pair_0.png);	}
+#wrapper.ave.light_tema #div_bus_pair_images_container .div_bus_pair_img:nth-child(2n)			{	background-image: url(light/bus_pair_1.png);	}
+/***/
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .big
+{
+  	background: url(light/parenthesis_big.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .medium
+{
+    background: url(light/parenthesis_medium.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .small
+{
+	background: url(light/parenthesis_little.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .big:last-child
+{
+  	background: url(light/parenthesis_big_f.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .medium:nth-last-child(2)
+{
+    background: url(light/parenthesis_medium_f.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .small:nth-last-child(3)
+{
+	background: url(light/parenthesis_little_f.png) no-repeat center center;
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .point
+{
+	background-color: rgb(0, 165, 180);
+}
+#wrapper.ave.light_tema .widget_device_wireless .div_wireless_images .point.disabled
+{
+	background-color: rgb(0, 165, 180, 0.3);
+}
+#wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .number
+, #wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .name
+, #wrapper.ave.light_tema .widget_add_other_users .add_other_users_item .number
+, #wrapper.ave.light_tema .widget_add_other_users .add_other_users_item .name
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .number
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .name
+, #wrapper.ave.light_tema .widget_scenery_device_list .scenery_device_list_item .number
+, #wrapper.ave.light_tema .widget_scenery_device_list .scenery_device_list_item .name 
+{
+    color: rgba(0, 0, 0, 0.9);
+}
+#wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .type
+, #wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .room
+, #wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .area
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .type
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .room
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .area
+, #wrapper.ave.light_tema .widget_scenery_device_list .scenery_device_list_item .type
+, #wrapper.ave.light_tema .widget_scenery_device_list .scenery_device_list_item .room
+, #wrapper.ave.light_tema .widget_scenery_device_list .scenery_device_list_item .area 
+{
+    color: rgba(0, 0, 0, 0.6);
+}
+#wrapper.ave.light_tema .wire_in_virt
+{
+	color: #00A5B4 !important;
+}
+#wrapper.ave.light_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on .text_wrapper .name .vname
+{
+	color: #00A5B4;
+}
+/**widget_zone_select_vert**/
+#wrapper.ave.light_tema #widget_zone_select_vert .zone_select_container .zone_select_item.on .itembox
+{
+	border-width: 0px;
+	background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.light_tema #widget_zone_select_vert .zone_select_container .zone_select_item.off .itembox
+{
+	border-width: 0px;
+	background-color: rgba(67, 80, 86, 0.8);
+}
+/**widget_audio_edit**/
+#wrapper.ave.light_tema .widget_audio_edit .audio_edit_body .desc
+{
+	color: black;
+}
+#wrapper.ave.light_tema .widget_audio_edit .audio_edit_body .sec
+{
+	color: rgba(0, 0, 0, 0.3);
+}
+#wrapper.ave.light_tema #widget_audio_edit .audio_edit_body .rec
+{
+	background: url(light/rec.png) no-repeat center center;
+}
+#wrapper.ave.light_tema #widget_audio_edit .audio_edit_body .stop
+{
+	background: url(light/stop.png) no-repeat center center;
+}
+#wrapper.ave.light_tema #widget_audio_edit .audio_edit_body .play
+{
+	background: url(light/play.png) no-repeat center center;
+}
+/**/
+#wrapper.ave.light_tema .widget_lang .lang_button
+, #wrapper.ave.light_tema .widget_region .region_button
+{
+	color: rgba(0, 0, 0, 0.5);
+}
+/**/
+#wrapper.ave.light_tema #rt_info_container .batt_dev_st .name
+{
+	color: black;
+}
+/**/
+#wrapper.ave.light_tema .widget_test_device_detail .info_dev p
+{
+	color: green;
+}
+/**/
+#wrapper.ave.light_tema .widget_rt_info2 .rt_bus_in_frmt_poll
+{
+	background-image: url(light/in_poll.png);
+}
+#wrapper.ave.light_tema .widget_keypad .kbd_value *
+{
+	color: black;
+}
+#wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .eve_desc
+{
+	color: black;
+}
+#wrapper.ave.light_tema .widget_test_field_meter .fm_title
+{
+	color: black;
+}
+#wrapper.ave.light_tema .widget_test_field_meter .graph
+{
+	background-image: url(light/field_meter_bg_ave.png);
+}
+#wrapper.ave.light_tema .widget_popwarn .popwarn_body .pw_bar
+{
+	background-image: url(light/field_meter_bg_ave.png);
+}
+#wrapper.ave.light_tema .widget_popwarn .popwarn_body .pw_input
+{
+	color: black;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+#wrapper.ave.light_tema .widget_new_plant #new_plant_name > input
+{
+	color: black;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+#wrapper.ave.light_tema .widget_add_scenery .days_week.c_clear, .widget_add_tslot .days_week.c_clear
+{
+	color: grey;
+}
+#wrapper.ave.light_tema .widget_add_scenery .days_week.bg_clear
+{
+	background-color: lightgrey;
+}
+#wrapper.ave.light_tema .widget_add_scenery .global_item .delete
+, #wrapper.ave.light_tema .widget_scenery_list .global_item .delete
+{
+	background-image: url(light/del.png);
+}
+#wrapper.ave.light_tema .widget_add_scenery .global_item .edit
+, #wrapper.ave.light_tema .widget_scenery_list .global_item .edit
+{
+	background-image: url(light/eye.png);
+}
+#wrapper.ave.light_tema .widget_cmd_device .info_dev p
+{
+	color: black;
+}
+#wrapper.ave.light_tema #container_thermostat_device .slot_picker .value
+{
+	background-image: url(light/punto.png);
+}
+#wrapper.ave.light_tema #widget_zone_select_vert .text
+{
+	color: black;
+}
+#wrapper.ave.light_tema .global_items_container .global_item.visual .get_frame
+{
+	background: rgba(0,0,0,0.3) url(light/arrow_circle.png) no-repeat center 45%;
+}
+#wrapper.ave.light_tema .summary .summary_menu .item .summary_label
+{
+	color: black;
+}
+#wrapper.ave.light_tema .widget_confirm #widget_confirm_name
+{
+	color: black;
+}
+#wrapper.ave.light_tema .yefnt
+{
+	color: rgb(0, 100, 123) !important;
+}
+#wrapper.ave.light_tema .yebg
+{
+	background-color: rgb(0, 100, 123);
+}
+#wrapper.ave.light_tema #JStoast.bg_red_gr
+{
+	background-color: rgba(255, 255, 255, 1) !important;
+}
+/***/
+#wrapper.ave.light_tema .widget_login_small .keys
+, #wrapper.ave.light_tema .generic_keyboard .keys
+{
+    background-color: #FFFFFF;
+}
+#wrapper.ave.light_tema .widget_login_small .keys .key
+, #wrapper.ave.light_tema .generic_keyboard .keys .key
+{
+    background-color: #00A5B4;
+}
+#wrapper.ave.light_tema .widget_login_small .keys .key .num
+, #wrapper.ave.light_tema .generic_keyboard .keys .key .num
+{
+	color: #FFFFFF;
+}
+#wrapper.ave.light_tema .widget_login_small .keys .key#pin_cancel .inner
+, #wrapper.ave.light_tema .generic_keyboard .keys .key#num_cancel .inner
+{
+	background-image: url(cancel.png);
+}
+#wrapper.ave.light_tema .widget_login_small .pin .point_container
+, #wrapper.ave.light_tema .generic_keyboard .pin .point_container
+{
+	background-color: #00A5B4;
+}
+#wrapper.ave.light_tema .point.bg_clear
+{
+	background-color: #FFFFFF;
+}
+#wrapper.ave.light_tema .widget_login_small .pin .attempt
+{
+	color: #FFFFFF;
+}
+#wrapper.ave.light_tema #popwarn_abort
+, #wrapper.ave.light_tema #popwarn_ok
+, #wrapper.ave.light_tema #popwarn_abort2
+, #wrapper.ave.light_tema #popwarn_ok2
+, #wrapper.ave.light_tema #escape_diag
+, #wrapper.ave.light_tema #ok_diag
+{
+	background-color: #00A5B4;
+	color: black;
+}
+#wrapper.ave.light_tema .header_right_container span.icon-elegant-arrow-carrot-left
+, #wrapper.ave.light_tema #backTitle
+{
+	color: #00A5B4;
+}
+#wrapper.ave.light_tema .header_title.abnormalities_title_color
+{
+	color: black;
+}
+#wrapper.ave.light_tema #t_exit
+{
+	color: black;
+}
+#wrapper.ave.light_tema #i_name
+{
+	background-image: url(light/logoAVE_white.png);
+}
+#wrapper.ave.light_tema #header-home-page #mybatinfo
+{
+	color: rgba(0, 0, 0, 0.6);
+}
+#wrapper.ave.light_tema #widget_add_other_devices .add_other_devices_item .eye_binder
+, #wrapper.ave.light_tema .widget_add_other_users .add_other_users_item .eye_binder
+, #wrapper.ave.light_tema .widget_test_device_list .test_device_list_item .eye_binder
+, #wrapper.ave.light_tema #widget_iot .eye_binder
+{
+	background-image: url(light/eye_light.png);
+}
+#wrapper.ave.light_tema #widget_log_entire .p_text
+{
+	text-shadow: 0px 0px;
+}
+#wrapper.ave.light_tema #footer-home-page #footer_area_b
+{
+	background-color: #FFFFFF;
+}
+#wrapper.ave.light_tema #icon-elegant-bars
+{
+	background-image: url(light/bars.png);
+}
+#wrapper.ave.light_tema .common_arrow.right
+{
+	background-image: url(light/arrow_down_w.png);
+}
+#wrapper.ave.light_tema .common_arrow.left
+{
+	background-image: url(light/arrow_up_w.png);
+}
+#wrapper.ave.light_tema #exit_lbl
+{
+	color: #00A5B4;
+}
+#wrapper.ave.light_tema #exit_ico
+{
+	background-image: url(light/arrow_exit.png);
+}
+#wrapper.ave.light_tema .footer_area_home .footer_container_btn_area_home.left > *
+, #wrapper.ave.light_tema #header_center_container_stdby .header_container_btn_area_home.left > * 
+{
+    background-color: white;
+}
+/***/
+/*******************/
+/*******************/
+/****** TEAL *******/
+/*******************/
+#wrapper.ave.teal_tema .bg_azure_gr
+{
+	background-color: rgb(246, 246, 246) !important;
+}
+#wrapper.ave.teal_tema .g_bg_dark
+{
+	background-color: rgb(0, 139, 160);
+}
+#wrapper.ave.teal_tema .brb
+, #wrapper.ave.teal_tema .ibrb
+{
+    border-bottom-color: #333333;
+}
+#wrapper.ave.teal_tema .brr
+, #wrapper.ave.teal_tema .ibrr
+{
+	border-right-color: #333333;
+}
+#wrapper.ave.teal_tema .brt
+, #wrapper.ave.teal_tema .ibrt
+{
+	border-top-color: #333333;
+}
+#wrapper.ave.teal_tema .brl
+, #wrapper.ave.teal_tema .ibrl
+{
+	border-left-color: #333333;
+}
+/**/
+#wrapper.ave.teal_tema
+, #wrapper.ave.teal_tema .widget_login_small
+, #wrapper.ave.teal_tema .widget_sideanom
+, #wrapper.ave.teal_tema .widget_zone_select_vert
+, #wrapper.ave.teal_tema .widget_keypad
+, #wrapper.ave.teal_tema .widget_scenery_device_list
+, #wrapper.ave.teal_tema .widget_test_device_detail
+, #wrapper.ave.teal_tema .widget_cmd_device_cen
+, #wrapper.ave.teal_tema .widget_thermostat_device
+{
+<?php 
+	$arr = @split(":", $_SERVER['HTTP_HOST']);
+	if ($arr[0] == "127.0.0.1")
+	{
+?>
+	background-image: url(public/images/teal/fix_sf_body.jpg);
+<?php
+	}
+	else
+	{
+?>
+	background-image: url(public/images/teal/mobi_sf_body.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+<?php
+	}
+?>
+}
+/**widget_zone_select_vert**/
+#wrapper.ave.teal_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on .itembox
+{
+	border: 2px solid #4ba1b5;
+	background-color: rgb(0, 126, 149);
+}
+#wrapper.ave.teal_tema .widget_zone_select_vert .zone_select_container .zone_select_item.off .itembox
+{
+	border-width: 0px;
+	background-color: rgba(0, 68, 92, 0.8);
+}
+#wrapper.ave.teal_tema .bg_bla
+{
+	background-color: rgb(0, 100, 123);
+}
+#wrapper.ave.teal_tema .grid_container .slot .ico
+, #wrapper.ave.teal_tema .dyn_slot .ico
+{
+	background-color: #00445C;
+}
+/**widget_leaf_home**/
+#wrapper.ave.teal_tema .widget_leaf_home .ico1 { background-image: url(public/images/teal/widget_leaf_home/Lock_Grey.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico1.S00120 { background-image: url(public/images/teal/area_total_on.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico1.S00121 { background-image: url(public/images/teal/area_total_off.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico1.S00122 { background-image: url(public/images/teal/area_partial_on.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico1.S00127 { background-image: url(public/images/teal/area_alarmed.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico2 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico3 { background-image: url(public/images/teal/widget_leaf_home/Scenari.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico4 { background-image: url(public/images/teal/widget_leaf_home/User.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico5 { background-image: url(public/images/teal/widget_leaf_home/IP_Cam.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico6 { background-image: url(public/images/teal/widget_leaf_home/Test.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico7 { background-image: url(public/images/teal/widget_leaf_home/Communications.png);}
+#wrapper.ave.teal_tema .widget_leaf_home .ico8 { background-image: url(public/images/teal/widget_leaf_home/Settings.png);}
+/**widget_settings_utilities**/
+#wrapper.ave.teal_tema .widget_settings_utilities .ico1 { background-image: url(public/images/teal/widget_settings_utilities/DevicesAreas.png); }
+#wrapper.ave.teal_tema .widget_settings_utilities .ico2 { background-image: url(public/images/teal/widget_settings_utilities/Phone.png); }
+#wrapper.ave.teal_tema .widget_settings_utilities .ico3 { background-image: url(public/images/teal/widget_settings_utilities/Generalsettings.png); }
+#wrapper.ave.teal_tema .widget_settings_utilities .ico4 { background-image: url(public/images/teal/widget_settings_utilities/RemoteSupport.png); }
+#wrapper.ave.teal_tema .widget_settings_utilities .ico5 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+#wrapper.ave.teal_tema .widget_settings_utilities .ico6 { background-image: url(public/images/teal/widget_leaf_home/Test.png);}
+#wrapper.ave.teal_tema .widget_settings_utilities .ico7 { background-image: url(public/images/teal/widget_leaf_home/Communications.png);}
+#wrapper.ave.teal_tema .widget_settings_utilities .ico8 { background-image: url(public/images/teal/widget_leaf_home/User.png);}
+/**widget_devices_areas**/
+#wrapper.ave.teal_tema .widget_devices_areas .ico1 { background-image: url(public/images/teal/widget_devices_areas/Aree.png); }
+#wrapper.ave.teal_tema .widget_devices_areas .ico2 { background-image: url(public/images/teal/widget_devices_areas/Devices.png); }
+#wrapper.ave.teal_tema .widget_devices_areas .ico3 { background-image: url(public/images/teal/widget_devices_areas/Iot.png); }
+/**nav_settings_phone**/
+#wrapper.ave.teal_tema .nav_settings_phone .ico1 { background-image: url(public/images/teal/nav_settings_phone/Mic.png); }
+#wrapper.ave.teal_tema .nav_settings_phone .ico2 { background-image: url(public/images/teal/nav_settings_phone/Credit.png); }
+/**widget_audio**/
+#wrapper.ave.teal_tema .widget_audio .ico1 { background-image: url(public/images/teal/widget_audio/EventsBlue.png); }
+#wrapper.ave.teal_tema .widget_audio .ico2 { background-image: url(public/images/teal/widget_audio/Impianto.png); }
+#wrapper.ave.teal_tema .widget_audio .ico3 { background-image: url(public/images/teal/widget_audio/Aree.png); }
+#wrapper.ave.teal_tema .widget_audio .ico4 { background-image: url(public/images/teal/widget_audio/Devices.png); }
+/**nav_settings_generic**/
+#wrapper.ave.teal_tema .nav_settings_generic .ico1 { background-image: url(public/images/teal/nav_settings_generic/DateTime.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico2 { background-image: url(public/images/teal/nav_settings_generic/World.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico3 { background-image: url(public/images/teal/nav_settings_generic/Impianto.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico4 { background-image: url(public/images/teal/nav_settings_generic/Scenari.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico5 { background-image: url(public/images/teal/nav_settings_generic/CentralUnitParamaters.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico6 { background-image: url(public/images/teal/nav_settings_generic/Ceninfo.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico7 { background-image: url(public/images/teal/nav_settings_generic/Update.png);}
+#wrapper.ave.teal_tema .nav_settings_generic .ico8 { background-image: url(public/images/teal/nav_settings_generic/Index.png);}
+/**nav_lang_naz**/
+#wrapper.ave.teal_tema .nav_lang_naz .ico1 { background-image: url(public/images/teal/nav_lang_naz/World.png); }
+#wrapper.ave.teal_tema .nav_lang_naz .ico2 { background-image: url(public/images/teal/nav_lang_naz/Regione.png); }
+/**nav_settings_telegest**/
+#wrapper.ave.teal_tema .nav_settings_telegest .ico1 { background-image: url(public/images/teal/nav_settings_telegest/Gestione.png); }
+#wrapper.ave.teal_tema .nav_settings_telegest .ico2 { background-image: url(public/images/teal/nav_settings_telegest/Condivisione.png); }
+/**nav_communication**/
+#wrapper.ave.teal_tema .nav_communication .ico1 { background-image: url(public/images/teal/nav_communication/WiFi.png); }
+#wrapper.ave.teal_tema .nav_communication .ico2 { background-image: url(public/images/teal/nav_communication/Mail.png); }
+#wrapper.ave.teal_tema .nav_communication .ico3 { background-image: url(public/images/teal/nav_communication/Cloud.png); }
+#wrapper.ave.teal_tema .nav_communication .ico4 { background-image: url(public/images/teal/nav_communication/OtherCommunications.png); }
+/**widget_scenery_list**/
+#wrapper.ave.teal_tema .widget_scenery_list .ico1 { background-image: url(public/images/teal/widget_scenery_list/Scenari.png); }
+#wrapper.ave.teal_tema .widget_scenery_list .scenery_edit .ico1 { background-image: url(public/images/teal/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.teal_tema .widget_scenery_list .scenery_edit_iot .ico1 { background-image: url(public/images/teal/nav_settings_generic/ScenaryImposta.png); }
+#wrapper.ave.teal_tema .widget_scenery_list .scenery_iot .ico1 { background-image: url(public/images/teal/nav_settings_generic/ScenaryImpostaIot.png); }
+/**widget_test_device**/
+#wrapper.ave.teal_tema .widget_test_device .ico1 { background-image: url(public/images/teal/widget_test_device/FieldMeter.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico2 { background-image: url(public/images/teal/widget_test_device/Devices.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico3 { background-image: url(public/images/teal/widget_test_device/Phone.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico4 { background-image: url(public/images/teal/widget_test_device/Sounder.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico5 { background-image: url(public/images/teal/widget_test_device/IP_Cam.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico6 { background-image: url(public/images/teal/widget_test_device/Output.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico7 { background-image: url(public/images/teal/widget_test_device/Monitor.png); }
+#wrapper.ave.teal_tema .widget_test_device .ico8 { background-image: url(public/images/teal/widget_test_device/Wired.png); }
+/**widget_telegest**/
+#wrapper.ave.teal_tema .widget_telegest .ico1 { background-image: url(public/images/teal/widget_telegest/CondivisioneST.png); }
+#wrapper.ave.teal_tema .widget_telegest .ico1.share_status_on { background-image: url(public/images/teal/widget_telegest/CondivisioneST_on.png); }
+#wrapper.ave.teal_tema .widget_telegest .ico1.share_status_off { background-image: url(public/images/teal/widget_telegest/CondivisioneST_off.png); }
+/**widget_devices_add**/
+#wrapper.ave.teal_tema #widget_devices_add .ico1 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+#wrapper.ave.teal_tema #widget_devices_add .ico2 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+#wrapper.ave.teal_tema #widget_devices_add .ico3 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+/**widget_devices_add_bus**/
+#wrapper.ave.teal_tema #widget_devices_add_bus .ico1 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+#wrapper.ave.teal_tema #widget_devices_add_bus .ico2 { background-image: url(public/images/teal/widget_leaf_home/Events.png);}
+/**nav_settings_access**/
+#wrapper.ave.teal_tema .nav_settings_access .ico1 { background-image: url(public/images/teal/nav_settings_access/Settings.png);}
+#wrapper.ave.teal_tema .nav_settings_access .ico2 { background-image: url(public/images/teal/nav_settings_access/Installatore.png); }
+/**summary**/
+#wrapper.ave.teal_tema .summary .ico1 { background-image: url(public/images/teal/summary/World.png); }
+#wrapper.ave.teal_tema .summary .ico2 { background-image: url(public/images/teal/summary/Impianto.png); }
+#wrapper.ave.teal_tema .summary .ico3 { background-image: url(public/images/teal/summary/Aree.png); }
+#wrapper.ave.teal_tema .summary .ico4 { background-image: url(public/images/teal/summary/Devices.png); }
+#wrapper.ave.teal_tema .summary .ico5 { background-image: url(public/images/teal/summary/User.png); }
+#wrapper.ave.teal_tema .summary .ico6 { background-image: url(public/images/teal/summary/Mic.png); }
+#wrapper.ave.teal_tema .summary .ico7 { background-image: url(public/images/teal/summary/Communications.png); }
+#wrapper.ave.teal_tema .summary .ico8 { background-image: url(public/images/teal/summary/Scenari.png); }
+#wrapper.ave.teal_tema .summary .ico9 { background-image: url(public/images/teal/summary/CentralUnitParamaters.png); }
+#wrapper.ave.teal_tema .summary .ico10 { background-image: url(public/images/teal/summary/Installatore.png); }
+/******/
+#wrapper.ave.teal_tema #myrtc2
+{
+	color: white;
+}
+#wrapper.ave.teal_tema #JStoast.bg_red_gr
+{
+	background-color: rgba(0, 100, 123, 1) !important;
+}
+#wrapper.ave.teal_tema .popwarn_header
+{
+	background-color: rgb(0, 100, 123);
+}
+#wrapper.ave.teal_tema .widget_diag
+{
+	background-color: rgb(0, 100, 123);
+}
+#wrapper.ave.teal_tema .header_diag
+{
+	background-color: rgb(0, 100, 123);
+}
+#wrapper.ave.teal_tema .foot_button .label
+{
+	color: rgb(0, 100, 123);
+}
+#wrapper.ave.teal_tema .yefnt
+{
+	color: rgb(0, 240, 255) !important;
+}
+#wrapper.ave.teal_tema #widget_add_other_devices .add_other_devices_item .eye_binder .dev_id
+{
+	color: white;
+}
+#wrapper.ave.teal_tema .yebg
+{
+	background-color: rgb(0, 240, 255);
+}
+/***/
+#wrapper.ave.teal_tema .widget_login_small .keys
+, #wrapper.ave.teal_tema .generic_keyboard .keys
+{
+    background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.teal_tema .widget_login_small .keys .key
+, #wrapper.ave.teal_tema .generic_keyboard .keys .key
+{
+    background-color: rgb(0, 140, 170);
+}
+#wrapper.ave.teal_tema .widget_login_small .keys .key .num
+, #wrapper.ave.teal_tema .generic_keyboard .keys .key .num
+{
+	color: rgb(246, 246, 246);
+}
+#wrapper.ave.teal_tema .widget_login_small .pin .point_container div.point
+, #wrapper.ave.teal_tema .generic_keyboard .pin .point_container div.point
+{
+	border-color: rgb(246, 246, 246);
+}
+#wrapper.ave.teal_tema .widget_login_small .pin .point_container
+, #wrapper.ave.teal_tema .generic_keyboard .pin .point_container
+{
+	background-color: rgb(0, 140, 170);
+}
+#wrapper.ave.teal_tema .point.bg_clear
+{
+	background-color: rgb(246, 246, 246);
+}
+#wrapper.ave.teal_tema .widget_login_small .pin .attempt
+{
+	color: rgb(246, 246, 246);
+}
+#wrapper.ave.teal_tema .widget_zone_select_vert .zone_select_container .zone_select_item.on .text_wrapper .name .vname
+{
+	color: #00FFFF;
+}
+#wrapper.ave.teal_tema #popwarn_abort
+, #wrapper.ave.teal_tema #popwarn_ok
+, #wrapper.ave.teal_tema #popwarn_abort2
+, #wrapper.ave.teal_tema #popwarn_ok2
+, #wrapper.ave.teal_tema #escape_diag
+, #wrapper.ave.teal_tema #ok_diag
+{
+	background-color: rgb(246, 246, 246);
+	color: rgb(0, 139, 160);
+}
+#wrapper.ave.teal_tema #widget_add_other_devices .add_other_devices_item .eye_binder
+, #wrapper.ave.teal_tema .widget_add_other_users .add_other_users_item .eye_binder
+, #wrapper.ave.teal_tema .widget_test_device_list .test_device_list_item .eye_binder
+, #wrapper.ave.teal_tema #widget_iot .eye_binder
+{
+	background-image: url(teal/eye_teal.png);
+}
+#wrapper.ave.teal_tema .wire_in_virt
+{
+	color: #00ffff !important;
+}
+#wrapper.ave.teal_tema #footer-home-page #footer_area_b
+{
+	background-color: #00445C;
+}
+#wrapper.ave.teal_tema #icon-elegant-bars
+{
+	background-image: url(teal/bars.png);
+}
+#wrapper.ave.teal_tema .footer_area_home .footer_container_btn_area_home.left > *
+, #wrapper.ave.teal_tema #header_center_container_stdby .header_container_btn_area_home.left > * 
+{
+    background-color: #00445C;
+}

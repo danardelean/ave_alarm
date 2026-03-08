@@ -1,0 +1,177 @@
+@font-face
+{
+    font-family:"roboto-light";
+	src:url('fonts/Roboto-Light.ttf');
+    src:url('fonts/Roboto-Light.ttf')format('truetype');
+}
+@font-face
+{
+    font-family:"roboto-ultra-heavy";
+	src:url('fonts/Roboto-Black.ttf');
+    src:url('fonts/Roboto-Black.ttf')format('truetype');
+}
+@font-face
+{
+    font-family:"roboto-heavy";
+	src:url('fonts/Roboto-Bold.ttf');
+    src:url('fonts/Roboto-Bold.ttf')format('truetype');
+}
+@font-face
+{
+    font-family:"roboto-normal";
+	src:url('fonts/Roboto-Regular.ttf');
+    src:url('fonts/Roboto-Regular.ttf')format('truetype');
+}
+@font-face
+{
+    font-family:"roboto-ultra-light";
+	src:url('fonts/Roboto-Thin.ttf');
+    src:url('fonts/Roboto-Thin.ttf')format('truetype');
+}
+html
+{
+	background-color: #303030;
+}
+html, body
+{
+	width:100%;
+	height:100%;
+	margin:0px;
+	border:0px;
+	padding:0px;
+	color:white;
+	font-family:"roboto-normal", Arial, "Times New Roman";
+}
+.unselectable 
+{
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    user-drag:none;
+}
+div, img, p, hr
+{
+	position:absolute;
+	margin:0px;
+	border:0px;
+	padding:0px;
+}
+#fact_title
+{
+	top: 0px;
+	left: 0px;
+	width: 799px;
+	height: 60px;
+	color: white;
+	background-color: black;
+}
+#fact_title p
+{
+	width:inherit;
+	font-size: 40px;
+	line-height:60px;
+	text-align:center; 
+}
+#fact_prev
+{
+	top:429px;
+	left:0px;
+	width:100px;
+	height:50px;
+}
+#fact_prev p
+{
+	width:inherit;
+	line-height:50px;
+	text-align:center; 
+}
+#fact_next
+{
+	top:429px;
+	left:699px;
+	width:100px;
+	height:50px;
+}
+#fact_next p
+{
+	width:inherit;
+	line-height:50px;
+	text-align:center; 
+}
+#fact_footer
+{
+	top:429px;
+	left:0px;
+	width:799px;
+	height:50px;
+	background-color: black;
+}
+#fact_footer p
+{
+	width:inherit;
+	line-height:50px;
+	text-align:center; 
+}
+.fact_but_dis
+{
+	background-color: #252525;
+}
+.fact_but_ena
+{
+	background-color: #7070C0;	
+}
+.fact_but_red
+{
+	background-color: #FF3030;
+	color: #FFFFFF;
+	font-size: 30px;
+}
+.fact_but_green
+{
+	background-color: #00AA00;
+	color: #FFFFFF;	
+	font-size: 30px;
+}
+.fact_but_blue
+{
+	background-color: #4040FF;
+	color: #FFFFFF;
+	font-size: 30px;
+}
+.fact_but_grey
+{
+	background-color: #252525;
+	color: #808080;
+	font-size: 30px;
+}
+.fact_test_main
+{
+	top: 18px;
+	left: 0px;
+	width: 799px;
+	height: 369px;
+	color: white;
+}
+.fact_test
+{
+	top: 60px;
+	left: 0px;
+	width: 799px;
+	height: 369px;
+	color: white;
+}
+.fact_test_center
+{
+    margin: auto;
+	margin-top: 76px;
+}
+.fact_visible
+{
+	display: block;
+}
+.fact_invisible
+{
+	display: none;	
+}
