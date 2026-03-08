@@ -15,17 +15,17 @@ views:
       - type: horizontal-stack
         cards:
           - type: alarm-panel
-            entity: alarm_control_panel.giardino
+            entity: alarm_control_panel.area_1
             name: Giardino
             states:
               - arm_away
           - type: alarm-panel
-            entity: alarm_control_panel.cortile
+            entity: alarm_control_panel.area_2
             name: Cortile
             states:
               - arm_away
           - type: alarm-panel
-            entity: alarm_control_panel.garage
+            entity: alarm_control_panel.area_3
             name: Garage
             states:
               - arm_away
@@ -35,17 +35,10 @@ views:
         title: System Status
         icon: mdi:information-outline
         entities:
-          - entity: sensor.alarm_power
-            name: Mains Power
-            icon: mdi:power-plug
           - entity: sensor.alarm_battery
             name: Battery
           - entity: sensor.alarm_gsm
             name: GSM Provider
-          - entity: sensor.alarm_cloud
-            name: Cloud Connection
-          - entity: sensor.alarm_wifi
-            name: WiFi
 
       # ── Battery Gauge ──
       - type: gauge

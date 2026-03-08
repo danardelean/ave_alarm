@@ -25,14 +25,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         areas=entry.data.get(CONF_AREAS, "123"),
     )
 
-    if not await client.connect():
-        _LOGGER.error("Failed to connect to AVE alarm panel")
-        return False
-
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = client
 
+    # Forward platform setup BEFORE connecting so entities are always
+    # registered, even if the panel is temporarily unreachable.
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Connect in the background — entities will show as "unavailable"
+    # until the connection succeeds, then update automatically.
+    async def _async_connect(_now=None):
+        if not await client.connect():
+            _LOGGER.warning("Initial connection to AVE alarm failed, will retry")
+
+    hass.async_create_task(_async_connect())
 
     return True
 
