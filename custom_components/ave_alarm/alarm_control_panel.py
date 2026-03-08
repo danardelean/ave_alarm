@@ -77,6 +77,7 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
     """Representation of a single AVE alarm area."""
 
     _attr_has_entity_name = True
+    _attr_code_arm_required = False
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
@@ -140,6 +141,7 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
 
     _attr_has_entity_name = True
     _attr_name = "AVE Alarm"
+    _attr_code_arm_required = False
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
