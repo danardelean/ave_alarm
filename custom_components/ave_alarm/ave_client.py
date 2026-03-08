@@ -57,6 +57,18 @@ class AVEAlarmClient:
         self._callbacks: list[Callable] = []
         self._listen_task: asyncio.Task | None = None
         self._reconnect_task: asyncio.Task | None = None
+        self._rt_info_task: asyncio.Task | None = None
+        # Real-time system info from RT_INFO_GET
+        self._power_status: str | None = None
+        self._gsm_signal: str | None = None
+        self._wifi_info: dict[str, str] = {}
+        self._cloud_info: dict[str, str] = {}
+        self._wired_inputs: list[dict] = []
+        self._outputs: list[dict] = []
+        # Sensor device monitoring from TEST page
+        self._test_devices: list[dict] = []
+        self._test_measurements: list[dict] = []
+        self._test_active: bool = False
 
     @property
     def ws_url(self) -> str:
@@ -117,6 +129,46 @@ class AVEAlarmClient:
     def gsm_imei(self) -> str | None:
         """Return GSM IMEI."""
         return self._gsm_imei
+
+    @property
+    def gsm_signal(self) -> str | None:
+        """Return GSM signal strength (0-5)."""
+        return self._gsm_signal
+
+    @property
+    def power_status(self) -> str | None:
+        """Return power status (1=mains, 0=battery)."""
+        return self._power_status
+
+    @property
+    def wifi_info(self) -> dict[str, str]:
+        """Return WiFi info (mode, online, signal)."""
+        return self._wifi_info
+
+    @property
+    def cloud_info(self) -> dict[str, str]:
+        """Return cloud connection info."""
+        return self._cloud_info
+
+    @property
+    def wired_inputs(self) -> list[dict]:
+        """Return wired input states."""
+        return self._wired_inputs
+
+    @property
+    def outputs(self) -> list[dict]:
+        """Return output relay states."""
+        return self._outputs
+
+    @property
+    def test_devices(self) -> list[dict]:
+        """Return monitored device list with sensor flags."""
+        return self._test_devices
+
+    @property
+    def test_measurements(self) -> list[dict]:
+        """Return last sensor measurement data."""
+        return self._test_measurements
 
     def register_callback(self, callback: Callable) -> Callable:
         """Register a callback for state updates. Returns unregister function."""
@@ -186,6 +238,10 @@ class AVEAlarmClient:
     async def disconnect(self) -> None:
         """Disconnect from the alarm panel."""
         self._connected = False
+        self._test_active = False
+        if self._rt_info_task:
+            self._rt_info_task.cancel()
+            self._rt_info_task = None
         if self._listen_task:
             self._listen_task.cancel()
             self._listen_task = None
@@ -256,6 +312,115 @@ class AVEAlarmClient:
         )
         msg = self._build_request("00", "DEVICE_CMD", body)
         await self._send(msg)
+
+    async def _send_settings_login(self) -> None:
+        """Send settings login request (different from arm/disarm login)."""
+        body = (
+            f"<filter>POWERUSER|INST</filter>"
+            f"<act>LOGIN</act>"
+            f"<page>USER</page>"
+            f"<par>"
+            f"<code>{self._pin}</code>"
+            f"<type>SETTINGS</type>"
+            f"</par>"
+        )
+        msg = self._build_request("widget_login_small", "MENU", body)
+        await self._send(msg)
+
+    async def _send_test_init(self) -> None:
+        """Initialize the TEST page for sensor monitoring."""
+        body = "<act>INIT</act><page>TEST</page><par/>"
+        msg = self._build_request("00", "MENU", body)
+        await self._send(msg)
+
+    async def _send_test_load(self) -> None:
+        """Load the device list for sensor monitoring."""
+        body = "<act>LOAD</act><page>TEST</page><par>1</par>"
+        msg = self._build_request("widget_rt_info", "MENU", body)
+        await self._send(msg)
+
+    async def _send_test_start(self) -> None:
+        """Start sensor monitoring mode."""
+        body = "<act>START</act><page>TEST</page><par></par>"
+        msg = self._build_request("widget_rt_info", "MENU", body)
+        await self._send(msg)
+
+    async def _send_test_stop(self) -> None:
+        """Stop sensor monitoring mode."""
+        body = "<act>STOP</act><page>TEST</page><par/>"
+        msg = self._build_request("widget_rt_info", "MENU", body)
+        await self._send(msg)
+
+    async def _send_rt_info_get(self) -> None:
+        """Request real-time system info (power, battery, GSM, inputs, outputs)."""
+        body = "<page>UTILITY</page><act>RT_INFO_GET</act><par/>"
+        msg = self._build_request("widget_rt_info", "MENU", body)
+        await self._send(msg)
+
+    async def start_sensor_monitoring(self) -> bool:
+        """Start sensor monitoring via the TEST page.
+
+        Flow: SETTINGS LOGIN → INIT TEST → LOAD TEST → START TEST
+        Then begins RT_INFO_GET polling.
+        """
+        try:
+            _LOGGER.info("Starting sensor monitoring")
+
+            # Step 1: Settings login
+            await self._send_settings_login()
+            await asyncio.sleep(1.0)
+
+            # Step 2: Init TEST page
+            await self._send_test_init()
+            await asyncio.sleep(0.3)
+
+            # Step 3: Request RT_INFO_GET (system info)
+            await self._send_rt_info_get()
+
+            # Step 4: Load device list
+            await self._send_test_load()
+            await asyncio.sleep(0.3)
+
+            # Step 5: Start monitoring
+            await self._send_test_start()
+            await asyncio.sleep(0.3)
+
+            self._test_active = True
+
+            # Start RT_INFO polling loop
+            self._rt_info_task = asyncio.create_task(self._rt_info_poll_loop())
+
+            _LOGGER.info("Sensor monitoring started successfully")
+            return True
+
+        except Exception:
+            _LOGGER.exception("Failed to start sensor monitoring")
+            return False
+
+    async def stop_sensor_monitoring(self) -> None:
+        """Stop sensor monitoring."""
+        self._test_active = False
+        if self._rt_info_task:
+            self._rt_info_task.cancel()
+            self._rt_info_task = None
+        try:
+            await self._send_test_stop()
+            await asyncio.sleep(0.3)
+            await self._send_logout()
+        except Exception:
+            _LOGGER.debug("Error stopping sensor monitoring")
+
+    async def _rt_info_poll_loop(self) -> None:
+        """Periodically poll RT_INFO_GET for real-time system data."""
+        while self._connected and self._test_active:
+            try:
+                await self._send_rt_info_get()
+                await asyncio.sleep(30)  # Poll every 30 seconds
+            except asyncio.CancelledError:
+                break
+            except Exception:
+                _LOGGER.debug("RT_INFO poll error, retrying in 60s")
+                await asyncio.sleep(60)
 
     async def arm(self, areas: str | None = None) -> bool:
         """Arm the alarm for the specified areas.
@@ -447,12 +612,18 @@ class AVEAlarmClient:
         elif msg_type == "FILE_CONFIGURATION":
             self._parse_configuration(root)
 
-        # Handle LOGIN responses
+        # Handle MENU responses (login, RT_INFO, TEST, etc.)
         elif msg_type == "MENU":
             act = root.findtext("act", "")
             res = root.findtext("res", "")
             if act == "LOGIN":
                 _LOGGER.debug("Login result: %s", res)
+            elif act == "RT_INFO_GET":
+                self._parse_rt_info(root)
+            elif act == "LOAD":
+                page = root.findtext("page", "")
+                if page == "TEST" and res == "LOADED":
+                    self._parse_test_load(root)
 
     def _parse_configuration(self, root: ET.Element) -> None:
         """Parse FILE_CONFIGURATION response to extract area names and devices."""
@@ -483,6 +654,151 @@ class AVEAlarmClient:
                 "Loaded %d area names from panel configuration",
                 len(self._area_names),
             )
+
+    def _parse_rt_info(self, root: ET.Element) -> None:
+        """Parse RT_INFO_GET response for real-time system status."""
+        par = root.find("par")
+        if par is None:
+            return
+
+        updated = False
+
+        # Power status
+        pow_elem = par.find("Pow")
+        if pow_elem is not None:
+            st = pow_elem.findtext("st", "")
+            if st and st != self._power_status:
+                self._power_status = st
+                updated = True
+
+        # Battery percentage (more precise than AL010 event)
+        bat_elem = par.find("Bat")
+        if bat_elem is not None:
+            perc = bat_elem.findtext("perc", "")
+            if perc and perc != self._battery_level:
+                self._battery_level = perc
+                updated = True
+
+        # GSM signal strength
+        gsm_elem = par.find("Gsm")
+        if gsm_elem is not None:
+            signal = gsm_elem.findtext("signal", "")
+            if signal and signal != self._gsm_signal:
+                self._gsm_signal = signal
+                updated = True
+
+        # WiFi info
+        wifi_elem = par.find("Wifi")
+        if wifi_elem is not None:
+            new_wifi = {
+                "mode": wifi_elem.findtext("mode", ""),
+                "online": wifi_elem.findtext("online", ""),
+                "signal": wifi_elem.findtext("signal", ""),
+            }
+            if new_wifi != self._wifi_info:
+                self._wifi_info = new_wifi
+                updated = True
+
+        # Cloud info
+        cloud_elem = par.find("Cloud")
+        if cloud_elem is not None:
+            new_cloud = {
+                "persistent_st": cloud_elem.findtext("persistent_st", ""),
+                "ondemand_st": cloud_elem.findtext("ondemand_st", ""),
+            }
+            if new_cloud != self._cloud_info:
+                self._cloud_info = new_cloud
+                updated = True
+
+        # Wired inputs
+        inputs_elem = par.find("inputs")
+        if inputs_elem is not None:
+            new_inputs = []
+            for inp in inputs_elem.findall("input"):
+                new_inputs.append({
+                    "index": inp.get("n", ""),
+                    "device_id": inp.get("devid", ""),
+                    "label": inp.findtext("label", ""),
+                    "state": inp.findtext("st", ""),
+                })
+            if new_inputs != self._wired_inputs:
+                self._wired_inputs = new_inputs
+                updated = True
+
+        # Outputs
+        outputs_elem = par.find("outputs")
+        if outputs_elem is not None:
+            new_outputs = []
+            for out in outputs_elem.findall("output"):
+                new_outputs.append({
+                    "index": out.get("n", ""),
+                    "device_id": out.get("devid", ""),
+                    "label": out.findtext("label", ""),
+                    "state": out.findtext("st", ""),
+                })
+            if new_outputs != self._outputs:
+                self._outputs = new_outputs
+                updated = True
+
+        if updated:
+            _LOGGER.debug("RT_INFO updated: power=%s, bat=%s, gsm_sig=%s",
+                          self._power_status, self._battery_level,
+                          self._gsm_signal)
+            self._notify_callbacks()
+
+    def _parse_test_load(self, root: ET.Element) -> None:
+        """Parse TEST LOAD response for device list and sensor measurements."""
+        updated = False
+
+        # par contains device items with sensor flags
+        par = root.find("par")
+        if par is not None:
+            new_devices = []
+            for item in par.findall("item"):
+                dev = {
+                    "id": item.get("id", ""),
+                    "idx": item.get("idx", ""),
+                    "spv": item.get("spv", "0"),
+                    "bat": item.get("bat", "0"),
+                    "ala": item.get("ala", "0"),
+                    "tam": item.get("tam", "0"),
+                    "rf": item.get("rf", "0"),
+                    "tag": item.findtext("tag", ""),
+                    "name": item.findtext("name", ""),
+                    "subcategory": item.findtext("subcategory", ""),
+                    "areas": item.findtext("areas", ""),
+                }
+                new_devices.append(dev)
+            if new_devices:
+                self._test_devices = new_devices
+                updated = True
+                _LOGGER.info(
+                    "Loaded %d devices from TEST page", len(new_devices)
+                )
+
+        # par2 contains last measurement per sensor
+        par2 = root.find("par2")
+        if par2 is not None:
+            new_measurements = []
+            for item in par2.findall("item"):
+                meas_elem = item.find("meas")
+                meas = {
+                    "id": item.get("id", ""),
+                    "name": item.get("name", ""),
+                    "meas_id": meas_elem.get("id", "") if meas_elem is not None else "",
+                    "value": meas_elem.get("value", "") if meas_elem is not None else "",
+                    "localdt": meas_elem.get("localdt", "") if meas_elem is not None else "",
+                }
+                new_measurements.append(meas)
+            if new_measurements:
+                self._test_measurements = new_measurements
+                updated = True
+                _LOGGER.info(
+                    "Loaded %d sensor measurements", len(new_measurements)
+                )
+
+        if updated:
+            self._notify_callbacks()
 
     async def _listen_loop(self) -> None:
         """Listen for incoming WebSocket messages."""

@@ -1,4 +1,4 @@
-"""Sensor platform for AVE AF927 Alarm — anomalies, battery, GSM."""
+"""Sensor platform for AVE AF927 Alarm — anomalies, battery, GSM, devices."""
 from __future__ import annotations
 
 import logging
@@ -27,6 +27,7 @@ async def async_setup_entry(
         AVEBatterySensor(client, entry.entry_id),
         AVEGSMSensor(client, entry.entry_id),
         AVEPanelStateSensor(client, entry.entry_id),
+        AVEDeviceMonitorSensor(client, entry.entry_id),
     ]
 
     async_add_entities(entities)
@@ -162,6 +163,7 @@ class AVEGSMSensor(SensorEntity):
         """Return GSM details."""
         return {
             "imei": self._client.gsm_imei,
+            "signal_strength": self._client.gsm_signal,
         }
 
     @property
@@ -210,6 +212,87 @@ class AVEPanelStateSensor(SensorEntity):
         return {
             "area_states": self._client.area_states,
             "panel_serial": self._client.panel_serial,
+            "cloud_info": self._client.cloud_info,
+        }
+
+    @property
+    def available(self) -> bool:
+        """Return availability."""
+        return self._client.connected
+
+
+class AVEDeviceMonitorSensor(SensorEntity):
+    """Sensor showing monitored device count and status flags.
+
+    Tracks supervision, tamper, battery, alarm, and RF status
+    for all devices reported by the TEST page.
+    """
+
+    _attr_has_entity_name = True
+    _attr_name = "Alarm Device Monitor"
+    _attr_icon = "mdi:motion-sensor"
+
+    def __init__(self, client: AVEAlarmClient, entry_id: str) -> None:
+        """Initialize."""
+        self._client = client
+        self._attr_unique_id = f"ave_alarm_{entry_id}_device_monitor"
+        self._unregister_callback = None
+
+    async def async_added_to_hass(self) -> None:
+        """Register callback."""
+        self._unregister_callback = self._client.register_callback(
+            self._handle_update
+        )
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Unregister callback."""
+        if self._unregister_callback:
+            self._unregister_callback()
+
+    @callback
+    def _handle_update(self) -> None:
+        """Handle state update."""
+        self.async_write_ha_state()
+
+    @property
+    def native_value(self) -> str:
+        """Return number of monitored devices."""
+        devices = self._client.test_devices
+        return str(len(devices)) if devices else "0"
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        """Return per-device sensor flags and measurements."""
+        devices = self._client.test_devices
+        measurements = self._client.test_measurements
+
+        # Build a summary of devices with active flags
+        flagged = []
+        for dev in devices:
+            flags = []
+            if dev.get("spv") != "0":
+                flags.append("supervision")
+            if dev.get("bat") != "0":
+                flags.append("battery")
+            if dev.get("ala") != "0":
+                flags.append("alarm")
+            if dev.get("tam") != "0":
+                flags.append("tamper")
+            if dev.get("rf") != "0":
+                flags.append("rf")
+            if flags:
+                flagged.append({
+                    "tag": dev.get("tag"),
+                    "name": dev.get("name"),
+                    "flags": flags,
+                })
+
+        return {
+            "device_count": len(devices),
+            "devices": devices,
+            "flagged_devices": flagged,
+            "flagged_count": len(flagged),
+            "measurements": measurements,
         }
 
     @property

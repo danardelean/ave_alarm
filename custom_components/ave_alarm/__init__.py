@@ -12,7 +12,7 @@ from .ave_client import AVEAlarmClient
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [Platform.ALARM_CONTROL_PANEL, Platform.SENSOR]
+PLATFORMS = [Platform.ALARM_CONTROL_PANEL, Platform.BINARY_SENSOR, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -33,6 +33,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = client
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Start sensor monitoring (TEST page + RT_INFO polling)
+    hass.async_create_task(client.start_sensor_monitoring())
 
     return True
 

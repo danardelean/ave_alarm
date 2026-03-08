@@ -171,6 +171,85 @@ Areas are encoded as a 6-char string where each position corresponds to area 1-6
 - `-2----` = area 2 only
 - `1-----` = area 1 only
 
+## Sensor Monitoring Protocol (TEST Page)
+
+The panel supports real-time sensor monitoring via the TEST page. This requires a SETTINGS login.
+
+### Sensor Monitoring Flow
+1. **SETTINGS LOGIN**: `type="MENU"` with `<act>LOGIN</act>`, `<code>{PIN}</code>`, `<type>SETTINGS</type>`, `<filter>POWERUSER|INST</filter>`
+2. **INIT TEST**: `type="MENU"` with `<act>INIT</act>`, `<page>TEST</page>`
+3. **RT_INFO_GET**: `type="MENU"` with `<act>RT_INFO_GET</act>`, `<page>UTILITY</page>` — returns real-time system info
+4. **LOAD TEST**: `type="MENU"` with `<act>LOAD</act>`, `<page>TEST</page>`, `<par>1</par>` — returns device list with sensor flags
+5. **START TEST**: `type="MENU"` with `<act>START</act>`, `<page>TEST</page>` — begins live monitoring
+6. **RT_INFO_GET polling**: Repeated every ~2-30 seconds for live updates
+7. **STOP TEST**: `type="MENU"` with `<act>STOP</act>`, `<page>TEST</page>` — stops monitoring
+8. **LOGOUT**
+
+### RT_INFO_GET Response
+```xml
+<Response type="MENU">
+  <act>RT_INFO_GET</act><page>UTILITY</page>
+  <par>
+    <Pow><st>1</st></Pow>              <!-- 1=mains, 0=battery -->
+    <Bat><perc>100</perc></Bat>        <!-- battery percentage -->
+    <Gsm><signal>4</signal></Gsm>      <!-- 0-5 signal strength -->
+    <Wifi><mode>5</mode><online>1</online><signal>3</signal></Wifi>
+    <Cloud><persistent_st>3</persistent_st><ondemand_st>0</ondemand_st></Cloud>
+    <inputs>
+      <input n="0" devid="AL087"><label>Ingresso Filare 1</label><st>3</st></input>
+      <!-- ... 16 wired inputs (AL087-AL094, AL098-AL105) -->
+    </inputs>
+    <outputs>
+      <output n="0" devid="AL095"><label>Uscita Relay 1</label><st>2</st></output>
+      <output n="1" devid="AL096"><label>Uscita Relay 2</label><st>2</st></output>
+      <output n="2" devid="Out ATT"><label>Out ATT</label><st>0</st></output>
+      <output n="3" devid="Out ALL"><label>Out ALL</label><st>0</st></output>
+      <output n="4" devid="Out V1"><label>Out V1</label><st>0</st></output>
+      <output n="5" devid="Out V2"><label>Out V2</label><st>0</st></output>
+    </outputs>
+    <BusInputs /><BusRfSwis />
+  </par>
+  <res>OK</res>
+</Response>
+```
+
+### TEST LOAD Response
+Contains two `<par>` sections:
+- **`<par>`**: Device list with sensor status flags
+  ```xml
+  <item id="1" idx="1" spv="0" bat="0" ala="0" tam="0" rf="0">
+    <id>2</id><tag>AL002</tag><parent_id>2</parent_id>
+    <ord>0</ord><category>ALARM</category><subcategory>ALA001</subcategory>
+    <room>1</room><name>AF927 VIA ROMA 4</name><areas>123456</areas>
+  </item>
+  ```
+  Flags: `spv`=supervision, `bat`=battery, `ala`=alarm, `tam`=tamper, `rf`=radio signal (0=normal)
+
+- **`<par2>`**: Last measurement per wireless sensor
+  ```xml
+  <item id="1" name="Locale Tecnico">
+    <meas id="1" value="1" localdt="2025-08-03-0-02-53-44" />
+  </item>
+  ```
+
+### Wired Inputs (from RT_INFO_GET)
+| Index | Device ID | Label |
+|-------|-----------|-------|
+| 0-7 | AL087-AL094 | Ingresso Filare 1-8 |
+| 8-15 | AL098-AL105 | Ingresso Filare 1a-8a |
+
+Input states: `st=3` appears to be normal/closed.
+
+### Outputs (from RT_INFO_GET)
+| Index | Device ID | Label | Notes |
+|-------|-----------|-------|-------|
+| 0 | AL095 | Uscita Relay 1 | Physical relay |
+| 1 | AL096 | Uscita Relay 2 | Physical relay |
+| 2 | Out ATT | Out ATT | Virtual output |
+| 3 | Out ALL | Out ALL | Virtual output |
+| 4 | Out V1 | Out V1 | Virtual output |
+| 5 | Out V2 | Out V2 | Virtual output |
+
 ## Known Issues & TODOs
 - State reading on initial connection: The panel sends area states as part of the initial event stream after WebSocket connects and a HOME state request. If states aren't populated, a LOGIN→LOGOUT cycle can force an AL002 state event.
 - The ANOM_ACK step during arming is only needed when there are active anomalies (sensor tamper, low battery, etc.). The integration handles this conditionally.
