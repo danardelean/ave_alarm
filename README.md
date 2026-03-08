@@ -1,0 +1,98 @@
+# AVE AF927 Alarm — Home Assistant Integration
+
+A custom Home Assistant integration for the **AVE AF927PLUS** alarm panel, communicating over WebSocket with an XML-based protocol.
+
+## Features
+
+- **Alarm Control Panel** entities for each area (Giardino, Cortile, Garage, etc.) plus a global panel
+- **Sensors** for battery level, GSM signal/carrier info, panel state, and anomalies
+- Real-time state updates via WebSocket push events
+- Auto-reconnect with exponential backoff
+- HACS-compatible
+
+## Protocol Overview
+
+The AVE AF927 panel exposes a WebSocket server on port `14001`. Communication uses XML messages with the following structure:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Request id="00" source="{client_id}" target="{panel_sn}" protocolVersion="1.0" type="{TYPE}">
+  ...body...
+</Request>
+```
+
+### Key Commands
+
+| Action | Flow |
+|--------|------|
+| **Arm** | LOGIN → ANOM_ACK (optional) → C00102 (select areas) → C00101 (arm) → LOGOUT |
+| **Disarm** | LOGIN → C00102 (disarm areas) → LOGOUT |
+| **State** | Listen for AL002 device events with `<Area id="N" st="X" />` |
+
+### Area State Values
+
+| `st` value | Meaning |
+|------------|---------|
+| `0` | Disarmed (OFF) |
+| `1` | Arming (exit delay active, `texit` attribute shows seconds remaining) |
+| `2` | Armed (ON) |
+
+### Device IDs
+
+| Device | Purpose |
+|--------|---------|
+| `AL002` | Alarm areas (arm/disarm state) |
+| `AL001` | Panel status |
+| `AL010` | Battery (Info field = percentage) |
+| `AL015` | GSM module (carrier, IMEI) |
+
+## Installation
+
+### HACS (Recommended)
+
+1. Add this repository as a custom repository in HACS
+2. Install "AVE AF927 Alarm"
+3. Restart Home Assistant
+
+### Manual
+
+1. Copy the `custom_components/ave_alarm` folder into your Home Assistant `config/custom_components/` directory
+2. Restart Home Assistant
+
+## Configuration
+
+1. Go to **Settings → Integrations → Add Integration**
+2. Search for "AVE AF927 Alarm"
+3. Enter:
+   - **Host**: IP address of your alarm panel (e.g. `192.168.1.11`)
+   - **Port**: WebSocket port (default: `14001`)
+   - **PIN**: Your user PIN code
+   - **Panel Serial Number**: Target SN (default: `1234567890`)
+   - **Areas**: Which areas to control, e.g. `123` for areas 1-3
+
+## Entities Created
+
+### Alarm Control Panels
+- `alarm_control_panel.giardino` — Area 1
+- `alarm_control_panel.cortile` — Area 2
+- `alarm_control_panel.garage` — Area 3
+- `alarm_control_panel.ave_alarm` — Global (all configured areas)
+
+### Sensors
+- `sensor.alarm_anomalies` — Count of active anomalies (details in attributes)
+- `sensor.alarm_battery` — Battery level percentage
+- `sensor.alarm_gsm` — GSM carrier info (IMEI in attributes)
+- `sensor.alarm_panel_state` — Raw panel state code (area states in attributes)
+
+## Development Notes
+
+This integration was reverse-engineered from the AVE AF927PLUS web interface by intercepting WebSocket traffic. Key variables from the web UI:
+
+- `xml_my_sn` — Client source ID (timestamp-based, generated at connection time)
+- `xml_cen_sn` — Panel target serial number
+- `area_st_obj` — jQuery XML object holding area states
+- `status_area_global` — Global panel state code (`S00121` = disarmed, `S00122` = armed/arming)
+
+## License
+
+MIT
