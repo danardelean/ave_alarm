@@ -1,4 +1,4 @@
-"""AVE AF927 Alarm integration for Home Assistant."""
+"""AVE Alarm integration for Home Assistant."""
 from __future__ import annotations
 
 import logging
@@ -7,12 +7,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_AREAS, CONF_HOST, CONF_PIN, CONF_PORT, DEFAULT_TARGET_SN, DOMAIN
+from .const import CONF_AREAS, CONF_HOST, CONF_PIN, CONF_PORT, CONF_TARGET_SN, DEFAULT_TARGET_SN, DOMAIN
 from .ave_client import AVEAlarmClient
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [Platform.ALARM_CONTROL_PANEL, Platform.BINARY_SENSOR, Platform.SENSOR]
+PLATFORMS = [Platform.ALARM_CONTROL_PANEL, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -21,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         host=entry.data[CONF_HOST],
         port=entry.data[CONF_PORT],
         pin=entry.data[CONF_PIN],
-        target_sn=entry.data.get("target_sn", DEFAULT_TARGET_SN),
+        target_sn=entry.data.get(CONF_TARGET_SN, DEFAULT_TARGET_SN),
         areas=entry.data.get(CONF_AREAS, "123"),
     )
 
@@ -33,9 +33,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = client
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-
-    # Start sensor monitoring (TEST page + RT_INFO polling)
-    hass.async_create_task(client.start_sensor_monitoring())
 
     return True
 

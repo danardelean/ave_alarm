@@ -1,4 +1,4 @@
-"""Config flow for AVE AF927 Alarm integration."""
+"""Config flow for AVE Alarm integration."""
 from __future__ import annotations
 
 import logging
@@ -14,6 +14,7 @@ from .const import (
     CONF_HOST,
     CONF_PIN,
     CONF_PORT,
+    CONF_TARGET_SN,
     DEFAULT_AREAS,
     DEFAULT_PORT,
     DEFAULT_TARGET_SN,
@@ -29,12 +30,13 @@ DATA_SCHEMA = vol.Schema(
         vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
         vol.Required(CONF_PIN): str,
         vol.Optional(CONF_AREAS, default=DEFAULT_AREAS): str,
+        vol.Optional(CONF_TARGET_SN, default=DEFAULT_TARGET_SN): str,
     }
 )
 
 
 class AVEAlarmConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for AVE AF927 Alarm."""
+    """Handle a config flow for AVE Alarm."""
 
     VERSION = 1
 
@@ -45,12 +47,11 @@ class AVEAlarmConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            # Test connection
             client = AVEAlarmClient(
                 host=user_input[CONF_HOST],
                 port=user_input[CONF_PORT],
                 pin=user_input[CONF_PIN],
-                target_sn=DEFAULT_TARGET_SN,
+                target_sn=user_input.get(CONF_TARGET_SN, DEFAULT_TARGET_SN),
                 areas=user_input.get(CONF_AREAS, DEFAULT_AREAS),
             )
 
@@ -58,7 +59,6 @@ class AVEAlarmConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if await client.connect():
                     await client.disconnect()
 
-                    # Set unique ID based on host
                     await self.async_set_unique_id(
                         f"ave_alarm_{user_input[CONF_HOST]}"
                     )

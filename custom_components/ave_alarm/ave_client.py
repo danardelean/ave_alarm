@@ -1,4 +1,13 @@
-"""WebSocket client for AVE AF927 Alarm panel."""
+"""WebSocket client for AVE Alarm panel.
+
+Orchestrates the connection lifecycle and arm/disarm commands.
+Protocol encoding is in ``protocol.py``, XML parsing in ``parsers.py``.
+
+Connection flow:
+  1. WebSocket connect → version handshake → PAIRING → FILE config
+  2. Listen for STATE events (area states, battery, GSM, power, WiFi, cloud)
+  3. Arm/disarm: LOGIN(TERM_CODE) → optional ANOM_ACK → DEVICE_CMD → LOGOUT
+"""
 from __future__ import annotations
 
 import asyncio
@@ -14,18 +23,38 @@ from .const import (
     AREA_STATE_ARMING,
     AREA_STATE_OFF,
     CMD_ARM,
-    CMD_AREA_SELECT,
-    DEVICE_ALARM,
-    PROTOCOL_VERSION,
+    CMD_DISARM,
+    LOGIN_INHIBITED,
+    LOGIN_REFUSED,
+    MAX_AREAS,
+    STATE_ALARM,
+)
+from .parsers import (
+    PanelState,
+    parse_file_response,
+    parse_state_event,
+    parse_xml,
+)
+from .protocol import (
+    build_anom_ack_body,
+    build_device_cmd_body,
+    build_file_config_body,
+    build_login_body,
+    build_logout_body,
+    build_pairing_body,
+    build_request,
+    build_state_body,
+    encode_area_mask,
+    frame,
+    generate_source_sn,
+    to_xml_str,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
-XML_HEADER = '<?xml version="1.0" encoding="utf-8"?>'
-
 
 class AVEAlarmClient:
-    """Client to communicate with AVE AF927 alarm panel via WebSocket."""
+    """Client to communicate with AVE Alarm panel via WebSocket."""
 
     def __init__(
         self,
@@ -35,835 +64,456 @@ class AVEAlarmClient:
         target_sn: str,
         areas: str,
     ) -> None:
-        """Initialize the client."""
         self._host = host
         self._port = port
         self._pin = pin
         self._target_sn = target_sn
         self._areas = areas
+
+        # Connection state
         self._source_sn: str = ""
         self._ws: websockets.WebSocketClientProtocol | None = None
         self._connected = False
-        self._area_states: dict[str, str] = {}
-        self._area_names: dict[str, str] = {}
-        self._area_enabled: dict[str, bool] = {}
-        self._panel_serial: str = ""
-        self._panel_state: str = ""
-        self._anomalies: list[dict] = []
-        self._anomaly_warning_count: int = 0
-        self._battery_level: str | None = None
-        self._gsm_info: str | None = None
-        self._gsm_imei: str | None = None
+        self._paired = False
+        self._msg_id_counter = 0
+        self._pending_requests: dict[str, asyncio.Future] = {}
+
+        # All panel runtime state lives here
+        self.state = PanelState()
+
+        # Callbacks & background tasks
         self._callbacks: list[Callable] = []
         self._listen_task: asyncio.Task | None = None
         self._reconnect_task: asyncio.Task | None = None
-        self._rt_info_task: asyncio.Task | None = None
-        # Real-time system info from RT_INFO_GET
-        self._power_status: str | None = None
-        self._gsm_signal: str | None = None
-        self._wifi_info: dict[str, str] = {}
-        self._cloud_info: dict[str, str] = {}
-        self._wired_inputs: list[dict] = []
-        self._outputs: list[dict] = []
-        # Sensor device monitoring from TEST page
-        self._test_devices: list[dict] = []
-        self._test_measurements: list[dict] = []
-        self._test_active: bool = False
+
+    # ── Properties (delegate to self.state) ─────────────────────────
 
     @property
     def ws_url(self) -> str:
-        """Return the WebSocket URL."""
         return f"ws://{self._host}:{self._port}/"
 
     @property
     def connected(self) -> bool:
-        """Return connection status."""
-        return self._connected
+        return self._connected and self._paired
 
     @property
     def area_states(self) -> dict[str, str]:
-        """Return current area states."""
-        return self._area_states
+        return self.state.area_states
 
     @property
     def area_names(self) -> dict[str, str]:
-        """Return area names from panel configuration."""
-        return self._area_names
+        return self.state.area_names
 
     @property
     def area_enabled(self) -> dict[str, bool]:
-        """Return area enabled states from panel configuration."""
-        return self._area_enabled
+        return self.state.area_enabled
+
+    @property
+    def area_exit_delays(self) -> dict[str, int]:
+        return self.state.area_exit_delays
 
     @property
     def panel_serial(self) -> str:
-        """Return panel serial number."""
-        return self._panel_serial
+        return self.state.panel_serial
 
     @property
     def panel_state(self) -> str:
-        """Return panel state code."""
-        return self._panel_state
+        return self.state.panel_state
+
+    @property
+    def panel_version(self) -> str:
+        return self.state.panel_version
 
     @property
     def anomalies(self) -> list[dict]:
-        """Return list of current anomalies."""
-        return self._anomalies
-
-    @property
-    def anomaly_warning_count(self) -> int:
-        """Return anomaly warning count."""
-        return self._anomaly_warning_count
+        return self.state.anomalies
 
     @property
     def battery_level(self) -> str | None:
-        """Return battery level percentage."""
-        return self._battery_level
+        return self.state.battery_level
 
     @property
     def gsm_info(self) -> str | None:
-        """Return GSM carrier info."""
-        return self._gsm_info
+        return self.state.gsm_info
 
     @property
     def gsm_imei(self) -> str | None:
-        """Return GSM IMEI."""
-        return self._gsm_imei
+        return self.state.gsm_imei
 
     @property
-    def gsm_signal(self) -> str | None:
-        """Return GSM signal strength (0-5)."""
-        return self._gsm_signal
+    def gsm_state(self) -> str | None:
+        return self.state.gsm_state
 
     @property
-    def power_status(self) -> str | None:
-        """Return power status (1=mains, 0=battery)."""
-        return self._power_status
+    def power_state(self) -> str | None:
+        return self.state.power_state
 
     @property
-    def wifi_info(self) -> dict[str, str]:
-        """Return WiFi info (mode, online, signal)."""
-        return self._wifi_info
+    def wifi_state(self) -> str | None:
+        return self.state.wifi_state
 
     @property
-    def cloud_info(self) -> dict[str, str]:
-        """Return cloud connection info."""
-        return self._cloud_info
+    def cloud_state(self) -> str | None:
+        return self.state.cloud_state
 
-    @property
-    def wired_inputs(self) -> list[dict]:
-        """Return wired input states."""
-        return self._wired_inputs
-
-    @property
-    def outputs(self) -> list[dict]:
-        """Return output relay states."""
-        return self._outputs
-
-    @property
-    def test_devices(self) -> list[dict]:
-        """Return monitored device list with sensor flags."""
-        return self._test_devices
-
-    @property
-    def test_measurements(self) -> list[dict]:
-        """Return last sensor measurement data."""
-        return self._test_measurements
+    # ── Callbacks ───────────────────────────────────────────────────
 
     def register_callback(self, callback: Callable) -> Callable:
-        """Register a callback for state updates. Returns unregister function."""
+        """Register a state-change callback. Returns an unregister fn."""
         self._callbacks.append(callback)
-        def unregister():
-            self._callbacks.remove(callback)
+
+        def unregister() -> None:
+            if callback in self._callbacks:
+                self._callbacks.remove(callback)
+
         return unregister
 
-    def _notify_callbacks(self) -> None:
-        """Notify all registered callbacks of state change."""
-        for callback in self._callbacks:
+    def _notify(self) -> None:
+        for cb in self._callbacks:
             try:
-                callback()
+                cb()
             except Exception:
-                _LOGGER.exception("Error in callback")
+                _LOGGER.exception("Error in state callback")
 
-    def _generate_source_sn(self) -> str:
-        """Generate a source serial number (timestamp-based)."""
-        return str(int(time.time() * 1000))
+    # ── Transport ───────────────────────────────────────────────────
 
-    def _build_request(
-        self,
-        request_id: str,
-        request_type: str,
-        body: str,
-    ) -> str:
-        """Build an XML request message."""
-        return (
-            f'{XML_HEADER}'
-            f'<Request id="{request_id}" '
-            f'source="{self._source_sn}" '
-            f'target="{self._target_sn}" '
-            f'protocolVersion="{PROTOCOL_VERSION}" '
-            f'type="{request_type}">'
-            f'{body}'
-            f'</Request>'
-        )
+    def _next_msg_id(self) -> str:
+        self._msg_id_counter += 1
+        return f"{self._msg_id_counter:02d}"
+
+    async def _send(self, request_type: str, body: str, msg_id: str | None = None) -> None:
+        """Build, frame, and send an XML request."""
+        if not self._ws:
+            raise ConnectionError("Not connected")
+        xml = build_request(self._source_sn, self._target_sn, request_type, body, msg_id or "00")
+        _LOGGER.debug("TX: %s", xml[:200])
+        await self._ws.send(frame(xml))
+
+    async def _send_and_wait(self, request_type: str, body: str, timeout: float = 10.0) -> ET.Element | None:
+        """Send a request and wait for the correlated response."""
+        msg_id = self._next_msg_id()
+        fut: asyncio.Future[ET.Element] = asyncio.get_event_loop().create_future()
+        self._pending_requests[msg_id] = fut
+        await self._send(request_type, body, msg_id)
+        try:
+            return await asyncio.wait_for(fut, timeout=timeout)
+        except asyncio.TimeoutError:
+            _LOGGER.warning("Timeout (id=%s type=%s)", msg_id, request_type)
+            self._pending_requests.pop(msg_id, None)
+            return None
+
+    # ── Connection lifecycle ────────────────────────────────────────
 
     async def connect(self) -> bool:
-        """Connect to the alarm panel WebSocket."""
-        self._source_sn = self._generate_source_sn()
+        """Full handshake: WS connect → version → PAIRING → FILE config."""
+        self._source_sn = generate_source_sn()
+        self._msg_id_counter = 0
+        self._paired = False
+        self.state.config_loaded = False
+
         try:
+            _LOGGER.info("Connecting to AVE alarm at %s", self.ws_url)
             self._ws = await websockets.connect(
-                self.ws_url,
-                ping_interval=30,
-                ping_timeout=10,
-                close_timeout=5,
+                self.ws_url, ping_interval=None, ping_timeout=None, close_timeout=5,
             )
             self._connected = True
-            _LOGGER.info("Connected to AVE alarm at %s", self.ws_url)
 
-            # Login to read panel configuration, then logout to exit maintenance mode
-            await self._send_settings_login()
+            if not await self._version_handshake():
+                await self.disconnect()
+                return False
+
+            if not await self._pairing():
+                await self.disconnect()
+                return False
+            self._paired = True
+
+            # PAIRING response includes the configuration; fall back to
+            # explicit FILE request only if it wasn't loaded.
+            if not self.state.config_loaded:
+                await self._load_configuration()
             await asyncio.sleep(0.5)
-            await self._send_file_configuration()
-            await asyncio.sleep(0.5)
-            await self._send_logout()
-            await asyncio.sleep(0.3)
 
-            # Request initial state
-            await self._send_state_request("HOME")
-
-            # Start listening for events
             self._listen_task = asyncio.create_task(self._listen_loop())
+            await self._send("STATE", build_state_body("HOME"))
 
+            _LOGGER.info(
+                "Connected (version=%s central=%s areas=%d)",
+                self.state.panel_version,
+                self.state.central_device_id,
+                len(self.state.area_names),
+            )
             return True
+
         except Exception:
-            _LOGGER.exception("Failed to connect to AVE alarm at %s", self.ws_url)
-            self._connected = False
+            _LOGGER.exception("Connect failed")
+            self._connected = self._paired = False
             return False
 
     async def disconnect(self) -> None:
-        """Disconnect from the alarm panel."""
-        self._connected = False
-        self._test_active = False
-        if self._rt_info_task:
-            self._rt_info_task.cancel()
-            self._rt_info_task = None
-        if self._listen_task:
-            self._listen_task.cancel()
-            self._listen_task = None
-        if self._reconnect_task:
-            self._reconnect_task.cancel()
-            self._reconnect_task = None
+        self._connected = self._paired = False
+        for task in (self._listen_task, self._reconnect_task):
+            if task and not task.done():
+                task.cancel()
+        self._listen_task = self._reconnect_task = None
+        for fut in self._pending_requests.values():
+            if not fut.done():
+                fut.cancel()
+        self._pending_requests.clear()
         if self._ws:
-            await self._ws.close()
+            try:
+                await self._ws.close()
+            except Exception:
+                pass
             self._ws = None
-        _LOGGER.info("Disconnected from AVE alarm")
 
-    async def _send(self, message: str) -> None:
-        """Send a message via WebSocket."""
-        if not self._ws or not self._connected:
-            raise ConnectionError("Not connected to alarm panel")
-        _LOGGER.debug("Sending: %s", message)
-        await self._ws.send(message)
-
-    async def _send_state_request(self, state_type: str) -> None:
-        """Send a state request."""
-        msg = self._build_request(
-            "00", "STATE", f"<type>{state_type}</type>"
-        )
-        await self._send(msg)
-
-    async def _send_file_configuration(self) -> None:
-        """Request the panel's FILE_CONFIGURATION XML."""
-        msg = self._build_request("00", "FILE_CONFIGURATION", "")
-        await self._send(msg)
-
-    async def _send_login(self) -> None:
-        """Send login request."""
-        body = (
-            f"<filter>USER|POWERUSER</filter>"
-            f"<act>LOGIN</act>"
-            f"<page>USER</page>"
-            f"<par>"
-            f"<code>{self._pin}</code>"
-            f"<type>TERM_CODE</type>"
-            f"</par>"
-        )
-        msg = self._build_request("widget_login_small", "MENU", body)
-        await self._send(msg)
-
-    async def _send_logout(self) -> None:
-        """Send logout request."""
-        body = "<act>LOGOUT</act><page>USER</page><par/>"
-        msg = self._build_request("00", "MENU", body)
-        await self._send(msg)
-
-    async def _send_anom_ack(self, areas: str) -> None:
-        """Send anomaly acknowledgment."""
-        body = f"<type>ANOM_ACK</type><value>{areas}</value>"
-        msg = self._build_request("00", "STATE", body)
-        await self._send(msg)
-
-    async def _send_device_cmd(
-        self, command: str, device: str, pin: str, areas: str
-    ) -> None:
-        """Send a device command."""
-        body = (
-            f"<Command>{command}</Command>"
-            f"<Device>{device}</Device>"
-            f"<Arguments>"
-            f'<Argument id="PIN">{pin}</Argument>'
-            f'<Argument id="AREAS">{areas}</Argument>'
-            f"</Arguments>"
-        )
-        msg = self._build_request("00", "DEVICE_CMD", body)
-        await self._send(msg)
-
-    async def _send_settings_login(self) -> None:
-        """Send settings login request (different from arm/disarm login)."""
-        body = (
-            f"<filter>POWERUSER|INST</filter>"
-            f"<act>LOGIN</act>"
-            f"<page>USER</page>"
-            f"<par>"
-            f"<code>{self._pin}</code>"
-            f"<type>SETTINGS</type>"
-            f"</par>"
-        )
-        msg = self._build_request("widget_login_small", "MENU", body)
-        await self._send(msg)
-
-    async def _send_test_init(self) -> None:
-        """Initialize the TEST page for sensor monitoring."""
-        body = "<act>INIT</act><page>TEST</page><par/>"
-        msg = self._build_request("00", "MENU", body)
-        await self._send(msg)
-
-    async def _send_test_load(self) -> None:
-        """Load the device list for sensor monitoring."""
-        body = "<act>LOAD</act><page>TEST</page><par>1</par>"
-        msg = self._build_request("widget_rt_info", "MENU", body)
-        await self._send(msg)
-
-    async def _send_test_start(self) -> None:
-        """Start sensor monitoring mode."""
-        body = "<act>START</act><page>TEST</page><par></par>"
-        msg = self._build_request("widget_rt_info", "MENU", body)
-        await self._send(msg)
-
-    async def _send_test_stop(self) -> None:
-        """Stop sensor monitoring mode."""
-        body = "<act>STOP</act><page>TEST</page><par/>"
-        msg = self._build_request("widget_rt_info", "MENU", body)
-        await self._send(msg)
-
-    async def _send_rt_info_get(self) -> None:
-        """Request real-time system info (power, battery, GSM, inputs, outputs)."""
-        body = "<page>UTILITY</page><act>RT_INFO_GET</act><par/>"
-        msg = self._build_request("widget_rt_info", "MENU", body)
-        await self._send(msg)
-
-    async def start_sensor_monitoring(self) -> bool:
-        """Start sensor monitoring via the TEST page.
-
-        Flow: SETTINGS LOGIN → INIT TEST → LOAD TEST → START TEST
-        Then begins RT_INFO_GET polling.
-        """
+    async def _version_handshake(self) -> bool:
+        """Receive and log the panel's raw version string."""
         try:
-            _LOGGER.info("Starting sensor monitoring")
-
-            # Step 1: Settings login
-            await self._send_settings_login()
-            await asyncio.sleep(1.0)
-
-            # Step 2: Init TEST page
-            await self._send_test_init()
-            await asyncio.sleep(0.3)
-
-            # Step 3: Request RT_INFO_GET (system info)
-            await self._send_rt_info_get()
-
-            # Step 4: Load device list
-            await self._send_test_load()
-            await asyncio.sleep(0.3)
-
-            # Step 5: Start monitoring
-            await self._send_test_start()
-            await asyncio.sleep(0.3)
-
-            self._test_active = True
-
-            # Start RT_INFO polling loop
-            self._rt_info_task = asyncio.create_task(self._rt_info_poll_loop())
-
-            _LOGGER.info("Sensor monitoring started successfully")
+            raw = await asyncio.wait_for(self._ws.recv(), timeout=10.0)
+            v = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else raw
+            self.state.panel_version = v.strip().strip("\x02\x03")
+            _LOGGER.info("Panel version: %s", self.state.panel_version)
             return True
-
-        except Exception:
-            _LOGGER.exception("Failed to start sensor monitoring")
+        except asyncio.TimeoutError:
+            _LOGGER.error("Version handshake timeout")
             return False
 
-    async def stop_sensor_monitoring(self) -> None:
-        """Stop sensor monitoring."""
-        self._test_active = False
-        if self._rt_info_task:
-            self._rt_info_task.cancel()
-            self._rt_info_task = None
-        try:
-            await self._send_test_stop()
-            await asyncio.sleep(0.3)
-            await self._send_logout()
-        except Exception:
-            _LOGGER.debug("Error stopping sensor monitoring")
+    async def _pairing(self) -> bool:
+        """Send PAIRING request and consume messages until the response arrives.
 
-    async def _rt_info_poll_loop(self) -> None:
-        """Periodically poll RT_INFO_GET for real-time system data."""
-        while self._connected and self._test_active:
+        The panel sends a burst of STATE events before the PAIRING
+        Response (which contains the base64 configuration). We buffer
+        early STATE events and replay them after configuration loads,
+        since the device→subcategory map is needed to parse them.
+        """
+        pairing_id = self._next_msg_id()
+        await self._send("PAIRING", build_pairing_body(), pairing_id)
+        early_state_events: list[str] = []
+        deadline = time.monotonic() + 15.0
+        while time.monotonic() < deadline:
             try:
-                await self._send_rt_info_get()
-                await asyncio.sleep(30)  # Poll every 30 seconds
-            except asyncio.CancelledError:
+                raw = await asyncio.wait_for(self._ws.recv(), timeout=10.0)
+                xml_str = to_xml_str(raw)
+                if xml_str:
+                    # Buffer STATE events that arrive before config is loaded
+                    if not self.state.config_loaded:
+                        root = parse_xml(xml_str)
+                        if root is not None and root.tag == "Event" and root.get("type") == "STATE":
+                            early_state_events.append(xml_str)
+                    self._route_xml(xml_str)
+                    # Check if this was our PAIRING response
+                    root = parse_xml(xml_str)
+                    if root is not None and root.tag == "Response" and root.get("id") == pairing_id:
+                        # Replay buffered STATE events now that config is loaded
+                        if early_state_events and self.state.config_loaded:
+                            _LOGGER.debug("Replaying %d early STATE events", len(early_state_events))
+                            for evt_xml in early_state_events:
+                                self._route_xml(evt_xml)
+                        _LOGGER.info("Pairing completed (config_loaded=%s)", self.state.config_loaded)
+                        return True
+            except asyncio.TimeoutError:
                 break
-            except Exception:
-                _LOGGER.debug("RT_INFO poll error, retrying in 60s")
-                await asyncio.sleep(60)
+        _LOGGER.error("Pairing timeout — no response received")
+        return False
+
+    async def _load_configuration(self) -> None:
+        """Request FILE CONFIGURATION and consume responses until loaded."""
+        await self._send("FILE", build_file_config_body())
+        deadline = time.monotonic() + 10.0
+        while time.monotonic() < deadline:
+            try:
+                raw = await asyncio.wait_for(self._ws.recv(), timeout=5.0)
+                xml_str = to_xml_str(raw)
+                if xml_str:
+                    self._route_xml(xml_str)
+                if self.state.config_loaded:
+                    return
+            except (asyncio.TimeoutError, Exception):
+                break
+        if not self.state.config_loaded:
+            _LOGGER.warning("Configuration not loaded, using defaults")
+
+    # ── Arm / Disarm ────────────────────────────────────────────────
 
     async def arm(self, areas: str | None = None) -> bool:
-        """Arm the alarm for the specified areas.
-
-        Args:
-            areas: Area string like "123" for areas 1-3.
-                   Defaults to configured areas.
-        """
-        if areas is None:
-            areas = self._areas
-
-        # Build the full 6-digit area selection (pad with dashes)
-        area_select = "123456"
-        area_arm = ""
-        for i in range(1, 7):
-            if str(i) in areas:
-                area_arm += str(i)
-            else:
-                area_arm += "-"
-
+        """LOGIN → optional ANOM_ACK → DEVICE_CMD(C00101) → LOGOUT."""
+        areas = areas or self._areas
+        mask = encode_area_mask(areas)
         try:
-            _LOGGER.info("Arming areas: %s", areas)
+            _LOGGER.info("Arming areas=%s mask=%s", areas, mask)
+            if not await self._login_for_command():
+                return False
+            await asyncio.sleep(0.3)
 
-            # Step 1: Login
-            await self._send_login()
-            await asyncio.sleep(0.5)
-
-            # Step 2: Acknowledge anomalies (optional — only if anomalies present)
-            if self._anomalies:
-                _LOGGER.info(
-                    "Acknowledging %d anomalies before arming",
-                    len(self._anomalies),
-                )
-                await self._send_anom_ack(area_select)
+            if self.state.anomalies and self.state.anomaly_warning != "1":
+                flush = self.state.anomaly_flush_area or encode_area_mask(areas)
+                await self._send("STATE", build_anom_ack_body(flush))
                 await asyncio.sleep(0.3)
 
-            # Step 3: Select areas (C00102)
-            await self._send_device_cmd(
-                CMD_AREA_SELECT, DEVICE_ALARM, self._pin, area_select
-            )
+            device_id = self.state.central_device_id or "AL002"
+            await self._send("DEVICE_CMD", build_device_cmd_body(CMD_ARM, device_id, self._pin, mask))
             await asyncio.sleep(0.3)
-
-            # Step 4: Execute arm (C00101)
-            await self._send_device_cmd(
-                CMD_ARM, DEVICE_ALARM, self._pin, area_arm
-            )
-            await asyncio.sleep(0.3)
-
-            # Step 5: Logout
-            await self._send_logout()
-
-            _LOGGER.info("Arm command sent successfully")
+            await self._send("MENU", build_logout_body())
             return True
-
         except Exception:
-            _LOGGER.exception("Failed to arm alarm")
+            _LOGGER.exception("Arm failed")
+            await self._safe_logout()
             return False
 
     async def disarm(self, areas: str | None = None) -> bool:
-        """Disarm the alarm for the specified areas.
-
-        Args:
-            areas: Area string like "123" for areas 1-3.
-                   Defaults to configured areas.
-        """
-        if areas is None:
-            areas = self._areas
-
-        area_select = "123456"
-
+        """LOGIN → DEVICE_CMD(C00102) → LOGOUT."""
+        areas = areas or self._areas
+        mask = encode_area_mask(areas)
         try:
-            _LOGGER.info("Disarming areas: %s", areas)
-
-            # Step 1: Login
-            await self._send_login()
-            await asyncio.sleep(0.5)
-
-            # Step 2: Disarm (C00102)
-            await self._send_device_cmd(
-                CMD_AREA_SELECT, DEVICE_ALARM, self._pin, area_select
-            )
+            _LOGGER.info("Disarming areas=%s mask=%s", areas, mask)
+            if not await self._login_for_command():
+                return False
             await asyncio.sleep(0.3)
 
-            # Step 3: Logout
-            await self._send_logout()
-
-            _LOGGER.info("Disarm command sent successfully")
+            device_id = self.state.central_device_id or "AL002"
+            await self._send("DEVICE_CMD", build_device_cmd_body(CMD_DISARM, device_id, self._pin, mask))
+            await asyncio.sleep(0.3)
+            await self._send("MENU", build_logout_body())
             return True
-
         except Exception:
-            _LOGGER.exception("Failed to disarm alarm")
+            _LOGGER.exception("Disarm failed")
+            await self._safe_logout()
             return False
 
-    def _parse_message(self, data: str | bytes) -> None:
-        """Parse an incoming WebSocket message."""
-        if isinstance(data, bytes):
-            try:
-                data = data.decode("utf-8")
-            except UnicodeDecodeError:
-                _LOGGER.debug("Received binary data (not XML)")
-                return
+    async def _login_for_command(self) -> bool:
+        """Send TERM_CODE login and check result."""
+        resp = await self._send_and_wait("MENU", build_login_body(self._pin))
+        if resp is not None:
+            res = resp.findtext("res", "")
+            if res == LOGIN_REFUSED:
+                _LOGGER.error("Login refused")
+                return False
+            if res == LOGIN_INHIBITED:
+                _LOGGER.error("Login inhibited for %s s", resp.findtext("desc", ""))
+                return False
+        return True
 
-        if not data.strip().startswith("<?xml"):
-            return
-
+    async def _safe_logout(self) -> None:
         try:
-            root = ET.fromstring(data.split("?>", 1)[1] if "?>" in data else data)
-        except ET.ParseError:
-            _LOGGER.debug("Failed to parse XML: %s", data[:200])
+            await self._send("MENU", build_logout_body())
+        except Exception:
+            pass
+
+    # ── State helpers ───────────────────────────────────────────────
+
+    async def poll_state(self) -> None:
+        try:
+            await self._send("STATE", build_state_body("HOME"))
+        except Exception:
+            pass
+
+    def get_area_state(self, area_id: str) -> str:
+        return self.state.area_states.get(area_id, AREA_STATE_OFF)
+
+    def get_area_exit_delay(self, area_id: str) -> int:
+        return self.state.area_exit_delays.get(area_id, 0)
+
+    def is_armed(self, area_id: str | None = None) -> bool:
+        if area_id:
+            return self.get_area_state(area_id) == AREA_STATE_ARMED
+        return any(
+            self.state.area_states.get(str(i)) == AREA_STATE_ARMED
+            for i in range(1, MAX_AREAS + 1) if str(i) in self._areas
+        )
+
+    def is_arming(self, area_id: str | None = None) -> bool:
+        if area_id:
+            return self.get_area_state(area_id) == AREA_STATE_ARMING
+        return any(
+            self.state.area_states.get(str(i)) == AREA_STATE_ARMING
+            for i in range(1, MAX_AREAS + 1) if str(i) in self._areas
+        )
+
+    def is_in_alarm(self) -> bool:
+        return self.state.panel_state == STATE_ALARM
+
+    # ── Message routing ─────────────────────────────────────────────
+
+    def _parse_message(self, data: bytes | str) -> None:
+        """Parse and route an incoming WebSocket message."""
+        xml_str = to_xml_str(data)
+        if xml_str:
+            self._route_xml(xml_str)
+        else:
+            text = data.decode("utf-8", errors="replace") if isinstance(data, bytes) else data
+            _LOGGER.debug("Non-XML message: %s", text[:200])
+
+    def _route_xml(self, xml_str: str) -> None:
+        """Parse XML and dispatch to the correct handler."""
+        root = parse_xml(xml_str)
+        if root is None:
             return
 
+        tag = root.tag
         msg_type = root.get("type", "")
         source = root.get("source", "")
+        msg_id = root.get("id", "")
 
-        # Store panel serial
-        if source and not self._panel_serial:
-            self._panel_serial = source
+        if source and source != self._source_sn and not self.state.panel_serial:
+            self.state.panel_serial = source
 
-        # Handle STATE events
+        if tag == "Response":
+            self._on_response(root, msg_id, msg_type)
+        elif tag == "Event":
+            self._on_event(root, msg_type)
+
+    def _on_response(self, root: ET.Element, msg_id: str, msg_type: str) -> None:
+        # Resolve pending future
+        if msg_id in self._pending_requests:
+            fut = self._pending_requests.pop(msg_id)
+            if not fut.done():
+                fut.set_result(root)
+
+        # Also process the payload
+        updated = False
+        if msg_type in ("FILE", "PAIRING"):
+            updated = parse_file_response(root, self.state)
+
+        if updated:
+            self._notify()
+
+    def _on_event(self, root: ET.Element, msg_type: str) -> None:
+        updated = False
         if msg_type == "STATE":
-            device = root.findtext("Device", "")
-            state_code = root.findtext("State", "")
-            updated = False
-
-            if device == DEVICE_ALARM:
-                # Area states
-                if state_code:
-                    self._panel_state = state_code
-                areas_elem = root.find("Areas")
-                if areas_elem is not None:
-                    for area in areas_elem.findall("Area"):
-                        area_id = area.get("id", "")
-                        area_st = area.get("st", "")
-                        if area_id and area_st != self._area_states.get(area_id):
-                            self._area_states[area_id] = area_st
-                            updated = True
-                            _LOGGER.debug(
-                                "Area %s state: %s", area_id, area_st
-                            )
-
-                # Anomalies
-                anoms_elem = root.find("Anoms")
-                if anoms_elem is not None:
-                    self._anomaly_warning_count = int(
-                        anoms_elem.get("warning", "0")
-                    )
-                    new_anomalies = []
-                    for anom in anoms_elem.findall("Anom"):
-                        anom_data = {
-                            "id": anom.get("id", ""),
-                            "device_id": anom.findtext("id", ""),
-                            "timestamp": anom.findtext("Timestamp", ""),
-                            "localdt": anom.findtext("localdt", ""),
-                        }
-                        new_anomalies.append(anom_data)
-                    if new_anomalies != self._anomalies:
-                        self._anomalies = new_anomalies
-                        updated = True
-                        if new_anomalies:
-                            _LOGGER.warning(
-                                "Alarm anomalies detected: %s", new_anomalies
-                            )
-
-            elif device == "AL010":
-                # Battery level (Info field contains percentage like "100%")
-                info = root.findtext("Info", "")
-                if info:
-                    level = info.replace("%", "").strip()
-                    if level != self._battery_level:
-                        self._battery_level = level
-                        updated = True
-                        _LOGGER.debug("Battery level: %s%%", level)
-
-            elif device == "AL015":
-                # GSM info
-                info = root.findtext("Info", "")
-                imei = root.findtext("IMEI", "")
-                if info and info != self._gsm_info:
-                    self._gsm_info = info
-                    updated = True
-                if imei and imei != self._gsm_imei:
-                    self._gsm_imei = imei
-                    updated = True
-
-            if updated:
-                self._notify_callbacks()
-
-        # Handle FILE_CONFIGURATION responses
-        elif msg_type == "FILE_CONFIGURATION":
-            self._parse_configuration(root)
-
-        # Handle MENU responses (login, RT_INFO, TEST, etc.)
-        elif msg_type == "MENU":
-            act = root.findtext("act", "")
-            res = root.findtext("res", "")
-            if act == "LOGIN":
-                _LOGGER.debug("Login result: %s", res)
-            elif act == "RT_INFO_GET":
-                self._parse_rt_info(root)
-            elif act == "LOAD":
-                page = root.findtext("page", "")
-                if page == "TEST" and res == "LOADED":
-                    self._parse_test_load(root)
-
-    def _parse_configuration(self, root: ET.Element) -> None:
-        """Parse FILE_CONFIGURATION response to extract area names and devices."""
-        # The configuration may be wrapped in a Response/Configuration element
-        config = root.find("Configuration")
-        if config is None:
-            config = root
-
-        # Parse areas
-        areas_elem = config.find("Areas")
-        if areas_elem is not None:
-            for area in areas_elem.findall("Area"):
-                area_id = area.get("id", "")
-                area_desc = area.get("desc", f"Area {area_id}")
-                area_ena = area.get("ena", "FALSE").upper() == "TRUE"
-                if area_id:
-                    self._area_names[area_id] = area_desc
-                    self._area_enabled[area_id] = area_ena
-                    _LOGGER.debug(
-                        "Area %s: %s (enabled=%s)",
-                        area_id,
-                        area_desc,
-                        area_ena,
-                    )
-
-        if self._area_names:
-            _LOGGER.info(
-                "Loaded %d area names from panel configuration",
-                len(self._area_names),
-            )
-
-    def _parse_rt_info(self, root: ET.Element) -> None:
-        """Parse RT_INFO_GET response for real-time system status."""
-        par = root.find("par")
-        if par is None:
-            return
-
-        updated = False
-
-        # Power status
-        pow_elem = par.find("Pow")
-        if pow_elem is not None:
-            st = pow_elem.findtext("st", "")
-            if st and st != self._power_status:
-                self._power_status = st
-                updated = True
-
-        # Battery percentage (more precise than AL010 event)
-        bat_elem = par.find("Bat")
-        if bat_elem is not None:
-            perc = bat_elem.findtext("perc", "")
-            if perc and perc != self._battery_level:
-                self._battery_level = perc
-                updated = True
-
-        # GSM signal strength
-        gsm_elem = par.find("Gsm")
-        if gsm_elem is not None:
-            signal = gsm_elem.findtext("signal", "")
-            if signal and signal != self._gsm_signal:
-                self._gsm_signal = signal
-                updated = True
-
-        # WiFi info
-        wifi_elem = par.find("Wifi")
-        if wifi_elem is not None:
-            new_wifi = {
-                "mode": wifi_elem.findtext("mode", ""),
-                "online": wifi_elem.findtext("online", ""),
-                "signal": wifi_elem.findtext("signal", ""),
-            }
-            if new_wifi != self._wifi_info:
-                self._wifi_info = new_wifi
-                updated = True
-
-        # Cloud info
-        cloud_elem = par.find("Cloud")
-        if cloud_elem is not None:
-            new_cloud = {
-                "persistent_st": cloud_elem.findtext("persistent_st", ""),
-                "ondemand_st": cloud_elem.findtext("ondemand_st", ""),
-            }
-            if new_cloud != self._cloud_info:
-                self._cloud_info = new_cloud
-                updated = True
-
-        # Wired inputs
-        inputs_elem = par.find("inputs")
-        if inputs_elem is not None:
-            new_inputs = []
-            for inp in inputs_elem.findall("input"):
-                new_inputs.append({
-                    "index": inp.get("n", ""),
-                    "device_id": inp.get("devid", ""),
-                    "label": inp.findtext("label", ""),
-                    "state": inp.findtext("st", ""),
-                })
-            if new_inputs != self._wired_inputs:
-                self._wired_inputs = new_inputs
-                updated = True
-
-        # Outputs
-        outputs_elem = par.find("outputs")
-        if outputs_elem is not None:
-            new_outputs = []
-            for out in outputs_elem.findall("output"):
-                new_outputs.append({
-                    "index": out.get("n", ""),
-                    "device_id": out.get("devid", ""),
-                    "label": out.findtext("label", ""),
-                    "state": out.findtext("st", ""),
-                })
-            if new_outputs != self._outputs:
-                self._outputs = new_outputs
-                updated = True
-
+            updated = parse_state_event(root, self.state)
+        elif msg_type == "FILE":
+            updated = parse_file_response(root, self.state)
         if updated:
-            _LOGGER.debug("RT_INFO updated: power=%s, bat=%s, gsm_sig=%s",
-                          self._power_status, self._battery_level,
-                          self._gsm_signal)
-            self._notify_callbacks()
+            self._notify()
 
-    def _parse_test_load(self, root: ET.Element) -> None:
-        """Parse TEST LOAD response for device list and sensor measurements."""
-        updated = False
-
-        # par contains device items with sensor flags
-        par = root.find("par")
-        if par is not None:
-            new_devices = []
-            for item in par.findall("item"):
-                dev = {
-                    "id": item.get("id", ""),
-                    "idx": item.get("idx", ""),
-                    "spv": item.get("spv", "0"),
-                    "bat": item.get("bat", "0"),
-                    "ala": item.get("ala", "0"),
-                    "tam": item.get("tam", "0"),
-                    "rf": item.get("rf", "0"),
-                    "tag": item.findtext("tag", ""),
-                    "name": item.findtext("name", ""),
-                    "subcategory": item.findtext("subcategory", ""),
-                    "areas": item.findtext("areas", ""),
-                }
-                new_devices.append(dev)
-            if new_devices:
-                self._test_devices = new_devices
-                updated = True
-                _LOGGER.info(
-                    "Loaded %d devices from TEST page", len(new_devices)
-                )
-
-        # par2 contains last measurement per sensor
-        par2 = root.find("par2")
-        if par2 is not None:
-            new_measurements = []
-            for item in par2.findall("item"):
-                meas_elem = item.find("meas")
-                meas = {
-                    "id": item.get("id", ""),
-                    "name": item.get("name", ""),
-                    "meas_id": meas_elem.get("id", "") if meas_elem is not None else "",
-                    "value": meas_elem.get("value", "") if meas_elem is not None else "",
-                    "localdt": meas_elem.get("localdt", "") if meas_elem is not None else "",
-                }
-                new_measurements.append(meas)
-            if new_measurements:
-                self._test_measurements = new_measurements
-                updated = True
-                _LOGGER.info(
-                    "Loaded %d sensor measurements", len(new_measurements)
-                )
-
-        if updated:
-            self._notify_callbacks()
+    # ── Event loop ──────────────────────────────────────────────────
 
     async def _listen_loop(self) -> None:
-        """Listen for incoming WebSocket messages."""
         while self._connected:
             try:
                 if not self._ws:
                     break
-                message = await self._ws.recv()
-                self._parse_message(message)
+                self._parse_message(await self._ws.recv())
             except websockets.ConnectionClosed:
-                _LOGGER.warning("WebSocket connection closed")
-                self._connected = False
-                self._reconnect_task = asyncio.create_task(
-                    self._reconnect_loop()
-                )
+                _LOGGER.warning("WebSocket closed")
+                self._connected = self._paired = False
+                self._reconnect_task = asyncio.create_task(self._reconnect_loop())
                 break
             except asyncio.CancelledError:
                 break
             except Exception:
-                _LOGGER.exception("Error in listen loop")
+                _LOGGER.exception("Listen loop error")
                 await asyncio.sleep(1)
 
     async def _reconnect_loop(self) -> None:
-        """Attempt to reconnect after disconnection."""
         backoff = 5
         while not self._connected:
-            _LOGGER.info("Reconnecting in %d seconds...", backoff)
+            _LOGGER.info("Reconnecting in %ds…", backoff)
             await asyncio.sleep(backoff)
-            if await self.connect():
-                _LOGGER.info("Reconnected successfully")
-                break
+            try:
+                if await self.connect():
+                    self._notify()
+                    break
+            except Exception:
+                pass
             backoff = min(backoff * 2, 300)
-
-    async def poll_state(self) -> None:
-        """Poll the panel for current state by sending HOME request."""
-        try:
-            await self._send_state_request("HOME")
-        except Exception:
-            _LOGGER.debug("Failed to poll state")
-
-    def get_area_state(self, area_id: str) -> str:
-        """Get the state of a specific area."""
-        return self._area_states.get(area_id, AREA_STATE_OFF)
-
-    def is_armed(self, area_id: str | None = None) -> bool:
-        """Check if an area (or any configured area) is armed."""
-        if area_id:
-            return self.get_area_state(area_id) == AREA_STATE_ARMED
-        return any(
-            self._area_states.get(str(i)) == AREA_STATE_ARMED
-            for i in range(1, 7)
-            if str(i) in self._areas
-        )
-
-    def is_arming(self, area_id: str | None = None) -> bool:
-        """Check if an area (or any configured area) is arming."""
-        if area_id:
-            return self.get_area_state(area_id) == AREA_STATE_ARMING
-        return any(
-            self._area_states.get(str(i)) == AREA_STATE_ARMING
-            for i in range(1, 7)
-            if str(i) in self._areas
-        )

@@ -2,13 +2,14 @@
   "config": {
     "step": {
       "user": {
-        "title": "AVE AF927 Alarm",
-        "description": "Configure your AVE AF927 alarm panel connection.",
+        "title": "AVE Alarm",
+        "description": "Configure your AVE alarm panel connection.",
         "data": {
           "host": "Host (IP address)",
           "port": "WebSocket Port",
           "pin": "User PIN Code",
-          "areas": "Areas to control (e.g. 123)"
+          "areas": "Areas to control (e.g. 123)",
+          "target_sn": "Panel Serial Number"
         }
       }
     },
