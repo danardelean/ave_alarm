@@ -14,7 +14,6 @@ from .const import (
     CONF_HOST,
     CONF_PIN,
     CONF_PORT,
-    CONF_TARGET_SN,
     DEFAULT_AREAS,
     DEFAULT_PORT,
     DEFAULT_TARGET_SN,
@@ -29,7 +28,6 @@ DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_HOST): str,
         vol.Optional(CONF_PORT, default=DEFAULT_PORT): int,
         vol.Required(CONF_PIN): str,
-        vol.Optional(CONF_TARGET_SN, default=DEFAULT_TARGET_SN): str,
         vol.Optional(CONF_AREAS, default=DEFAULT_AREAS): str,
     }
 )
@@ -52,7 +50,7 @@ class AVEAlarmConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 host=user_input[CONF_HOST],
                 port=user_input[CONF_PORT],
                 pin=user_input[CONF_PIN],
-                target_sn=user_input[CONF_TARGET_SN],
+                target_sn=DEFAULT_TARGET_SN,
                 areas=user_input.get(CONF_AREAS, DEFAULT_AREAS),
             )
 

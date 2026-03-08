@@ -80,6 +80,8 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
+    _attr_code_arm_required = False
+    _attr_code_format = None
 
     def __init__(
         self,
@@ -93,19 +95,7 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
         self._area_id = area_id
         self._attr_name = area_name
         self._attr_unique_id = f"ave_alarm_{entry_id}_area_{area_id}"
-        self._attr_code_arm_required = False
-        self._attr_code_format = None
         self._unregister_callback = None
-
-    @property
-    def code_format(self) -> None:
-        """Return no code format — PIN is handled internally."""
-        return None
-
-    @property
-    def code_arm_required(self) -> bool:
-        """Return False — no code needed, PIN handled internally."""
-        return False
 
     async def async_added_to_hass(self) -> None:
         """Register callback when entity is added."""
@@ -155,6 +145,8 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
+    _attr_code_arm_required = False
+    _attr_code_format = None
 
     def __init__(
         self,
@@ -166,19 +158,7 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
         self._client = client
         self._areas = areas
         self._attr_unique_id = f"ave_alarm_{entry_id}_global"
-        self._attr_code_arm_required = False
-        self._attr_code_format = None
         self._unregister_callback = None
-
-    @property
-    def code_format(self) -> None:
-        """Return no code format — PIN is handled internally."""
-        return None
-
-    @property
-    def code_arm_required(self) -> bool:
-        """Return False — no code needed, PIN handled internally."""
-        return False
 
     async def async_added_to_hass(self) -> None:
         """Register callback when entity is added."""

@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_AREAS, CONF_HOST, CONF_PIN, CONF_PORT, CONF_TARGET_SN, DOMAIN
+from .const import CONF_AREAS, CONF_HOST, CONF_PIN, CONF_PORT, DEFAULT_TARGET_SN, DOMAIN
 from .ave_client import AVEAlarmClient
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         host=entry.data[CONF_HOST],
         port=entry.data[CONF_PORT],
         pin=entry.data[CONF_PIN],
-        target_sn=entry.data[CONF_TARGET_SN],
+        target_sn=entry.data.get("target_sn", DEFAULT_TARGET_SN),
         areas=entry.data.get(CONF_AREAS, "123"),
     )
 

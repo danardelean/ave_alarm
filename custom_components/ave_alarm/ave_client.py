@@ -220,8 +220,13 @@ class AVEAlarmClient:
             self._connected = True
             _LOGGER.info("Connected to AVE alarm at %s", self.ws_url)
 
-            # Request panel configuration (area names, devices, etc.)
+            # Login to read panel configuration, then logout to exit maintenance mode
+            await self._send_settings_login()
+            await asyncio.sleep(0.5)
             await self._send_file_configuration()
+            await asyncio.sleep(0.5)
+            await self._send_logout()
+            await asyncio.sleep(0.3)
 
             # Request initial state
             await self._send_state_request("HOME")

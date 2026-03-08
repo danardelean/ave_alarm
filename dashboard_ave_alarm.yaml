@@ -1,0 +1,82 @@
+title: AVE Alarm
+views:
+  - title: Alarm Control
+    path: alarm
+    icon: mdi:shield-home
+    cards:
+      # ── Global Alarm Control ──
+      - type: alarm-panel
+        entity: alarm_control_panel.ave_alarm
+        name: AVE Alarm
+        states:
+          - arm_away
+
+      # ── Per-Area Controls ──
+      - type: horizontal-stack
+        cards:
+          - type: alarm-panel
+            entity: alarm_control_panel.giardino
+            name: Giardino
+            states:
+              - arm_away
+          - type: alarm-panel
+            entity: alarm_control_panel.cortile
+            name: Cortile
+            states:
+              - arm_away
+          - type: alarm-panel
+            entity: alarm_control_panel.garage
+            name: Garage
+            states:
+              - arm_away
+
+      # ── System Status ──
+      - type: entities
+        title: System Status
+        icon: mdi:information-outline
+        entities:
+          - entity: binary_sensor.alarm_mains_power
+            name: Mains Power
+          - entity: sensor.alarm_battery
+            name: Battery
+          - entity: sensor.alarm_gsm
+            name: GSM
+          - entity: binary_sensor.alarm_wifi
+            name: WiFi
+          - entity: sensor.alarm_panel_state
+            name: Panel State
+
+      # ── Sensor Monitoring ──
+      - type: entities
+        title: Sensor Monitoring
+        icon: mdi:motion-sensor
+        entities:
+          - entity: binary_sensor.alarm_inputs
+            name: Inputs
+          - entity: sensor.alarm_anomalies
+            name: Anomalies
+          - entity: sensor.alarm_device_monitor
+            name: Device Monitor
+
+      # ── Battery & Signal Gauges ──
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            entity: sensor.alarm_battery
+            name: Battery
+            min: 0
+            max: 100
+            severity:
+              green: 60
+              yellow: 30
+              red: 10
+          - type: gauge
+            entity: sensor.alarm_gsm
+            name: GSM Signal
+            min: 0
+            max: 5
+            severity:
+              green: 3
+              yellow: 2
+              red: 0
+            attribute: signal_strength
