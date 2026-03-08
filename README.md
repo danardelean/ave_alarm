@@ -4,10 +4,11 @@ A custom Home Assistant integration for the **AVE AF927PLUS** alarm panel, commu
 
 ## Features
 
-- **Alarm Control Panel** entities for each area (Giardino, Cortile, Garage, etc.) plus a global panel
-- **Sensors** for battery level, GSM signal/carrier info, panel state, and anomalies
+- **Alarm Control Panel** entities for each configured area plus a global panel
+- **Sensors** for battery level, GSM provider, mains power, cloud status, and WiFi status
 - Real-time state updates via WebSocket push events
 - Auto-reconnect with exponential backoff
+- No code required for arm/disarm (PIN is stored in configuration)
 - HACS-compatible
 
 ## Protocol Overview
@@ -73,17 +74,20 @@ The AVE AF927 panel exposes a WebSocket server on port `14001`. Communication us
 ## Entities Created
 
 ### Alarm Control Panels
-Area names are automatically read from the panel configuration at startup. For example:
-- `alarm_control_panel.giardino` — Area 1 (name from panel)
-- `alarm_control_panel.cortile` — Area 2 (name from panel)
-- `alarm_control_panel.garage` — Area 3 (name from panel)
+One panel entity per configured area plus a global panel for all areas:
+- `alarm_control_panel.area_1` — Area 1 (e.g. Giardino)
+- `alarm_control_panel.area_2` — Area 2 (e.g. Cortile)
+- `alarm_control_panel.area_3` — Area 3 (e.g. Garage)
 - `alarm_control_panel.ave_alarm` — Global (all configured areas)
 
+Area names are read dynamically from the panel configuration.
+
 ### Sensors
-- `sensor.alarm_anomalies` — Count of active anomalies (details in attributes)
 - `sensor.alarm_battery` — Battery level percentage
-- `sensor.alarm_gsm` — GSM carrier info (IMEI in attributes)
-- `sensor.alarm_panel_state` — Raw panel state code (area states in attributes)
+- `sensor.alarm_gsm` — GSM carrier/provider info
+- `sensor.alarm_power` — Mains power status (on/off)
+- `sensor.alarm_cloud` — Cloud connection status
+- `sensor.alarm_wifi` — WiFi connection status
 
 ## Development Notes
 
