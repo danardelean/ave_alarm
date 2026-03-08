@@ -79,8 +79,13 @@ class AVEBatterySensor(_AVEBaseSensor):
         self._attr_unique_id = f"ave_alarm_{entry_id}_battery"
 
     @property
-    def native_value(self) -> str | None:
-        return self._client.battery_level
+    def native_value(self) -> int | None:
+        raw = self._client.battery_level
+        if raw is None:
+            return None
+        # Panel sends "100%" — strip non-digits and return as int
+        digits = "".join(c for c in raw if c.isdigit())
+        return int(digits) if digits else None
 
 
 # ── GSM ────────────────────────────────────────────────────────────
