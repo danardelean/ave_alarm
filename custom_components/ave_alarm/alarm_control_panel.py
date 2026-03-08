@@ -7,6 +7,7 @@ from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
     AlarmControlPanelEntityFeature,
     AlarmControlPanelState,
+    CodeFormat,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -78,6 +79,7 @@ class AVEAlarmPanel(AlarmControlPanelEntity):
 
     _attr_has_entity_name = True
     _attr_code_arm_required = False
+    _attr_code_format = None
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
@@ -142,6 +144,7 @@ class AVEAlarmPanelGlobal(AlarmControlPanelEntity):
     _attr_has_entity_name = True
     _attr_name = "AVE Alarm"
     _attr_code_arm_required = False
+    _attr_code_format = None
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_AWAY
     )
