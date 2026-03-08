@@ -73,9 +73,10 @@ The AVE AF927 panel exposes a WebSocket server on port `14001`. Communication us
 ## Entities Created
 
 ### Alarm Control Panels
-- `alarm_control_panel.giardino` — Area 1
-- `alarm_control_panel.cortile` — Area 2
-- `alarm_control_panel.garage` — Area 3
+Area names are automatically read from the panel configuration at startup. For example:
+- `alarm_control_panel.giardino` — Area 1 (name from panel)
+- `alarm_control_panel.cortile` — Area 2 (name from panel)
+- `alarm_control_panel.garage` — Area 3 (name from panel)
 - `alarm_control_panel.ave_alarm` — Global (all configured areas)
 
 ### Sensors

@@ -78,11 +78,98 @@ The panel pushes state events for device `AL002`:
 - `web_socket_send(msg)` — Send function
 - `ws_connected_flg` — Connection flag
 
-## Areas Configuration
-- Area 1: GIARDINO (Garden)
-- Area 2: CORTILE (Courtyard)
-- Area 3: GARAGE
-- Areas 4-6: Not configured / unused
+## Panel Configuration XML (`xml_file_configuration`)
+
+The panel stores its full configuration as an XML document accessible via the `xml_file_configuration` jQuery object in the web UI. Root element: `<Configuration>` with children:
+
+- `Central` (6), `Categories` (2), `Commands` (5), `Users` (2), `Devices` (129), `Scenes` (5), `Rooms` (32), `Expositions` (9), `Areas` (6), `System` (2), `Languages` (6), `Regions` (49), `Logs` (2), `VocalMessages` (3), `Errors` (12), `Timezones` (49), `MsgEvents` (20), `WifiRegions` (3), `PstnCountries` (9), `ReleModeRepeatEvents` (8), `WireModeRepeatEvents` (8), `SceneTriggerEvents` (15), `VigEvents` (17)
+
+### Areas Configuration
+```xml
+<Area id="1" desc="GIARDINO" ena="TRUE"/>
+<Area id="2" desc="CORTILE" ena="TRUE"/>
+<Area id="3" desc="GARAGE" ena="TRUE"/>
+<Area id="4" desc="Area 4" ena="FALSE"/>
+<Area id="5" desc="Area 5" ena="FALSE"/>
+<Area id="6" desc="Area 6" ena="FALSE"/>
+```
+
+Area names and enable/disable are stored in the configuration. The web UI uses a SAVE command on `page=AREA` to update them.
+
+### Settings Login
+Settings use a different login type than arm/disarm:
+- `<type>SETTINGS</type>` with `<filter>POWERUSER|INST</filter>` (vs `TERM_CODE` / `USER|POWERUSER` for arm/disarm)
+
+### Commands (from Configuration XML)
+| Command | Description | Primary |
+|---------|-------------|---------|
+| C00101 | Inserimento (Arm) | yes |
+| C00102 | Disinserimento (Disarm) | yes |
+| C00103 | Inserimento parziale (Partial arm) | no |
+| C00104 | Inserimento predefinito (Default arm) | yes |
+| C00105 | Soccorso Medico (Medical) | no |
+| C00106 | Soccorso Aggressione (Panic) | no |
+| C00107 | SOS Sirene | no |
+| C00108 | Inserimento forzato (Force arm) | no |
+| C00401 | Credito residuo SIM (SIM balance) | yes |
+| C00402 | Scadenza SIM (SIM expiry) | no |
+| C01501-C01506 | Siren vocal/alarm controls | no |
+
+### Key Configured Devices (31 active with area assignments)
+| ID | Description | Subcategory | Areas |
+|----|-------------|-------------|-------|
+| AL002 | AF927 VIA ROMA 4 | ALA001 (Centrale) | 123456 |
+| AL003 | Carrier | ALA201 | 123456 |
+| AL004 | Modulo Touch LCD | ALA003 | 123456 |
+| AL006-AL008 | WiFi modules | ALA102 | 123456 |
+| AL010 | Batteria | ALA104 | 123456 |
+| AL015 | Modulo GSM | ALA004 | 123456 |
+| AL041 | Tastiera (Keypad) | ALA006 | 123456 |
+| AL043-AL044 | Telecomando 1-2 (Remotes) | ALA007 | 123456 |
+| AL045 | Sirena Esterna | ALA015 | 123--- |
+| AL082 | TELECAMERA PISCINA | ALA017 | 123456 |
+| AL083 | TELECAMERA CORTILE | ALA017 | 123456 |
+| AL084 | TELECAMERA TERRAZZA | ALA017 | 123456 |
+| AL085 | TELECAMERA ENTRATA | ALA017 | 123456 |
+| AL115 | Locale Tecnico | ALA010 (IR) | --3--- |
+| AL146 | TELECAMERA LATO STRADA | ALA017 | 123456 |
+| AL152 | Sirena Cortile | ALA015 | -2---- |
+| AL159 | Cortile 2 | ALA025 | -2---- |
+| AL160 | Cortile 1 | ALA025 | -2---- |
+| AL161 | Ripetitore Palestra | ALA018 | 123456 |
+| AL162 | Giardino 2 | ALA025 | 1----- |
+| AL164 | Giardino 1 | ALA025 | 1----- |
+
+### Device Subcategories (from `device_associative_array`)
+| Code | Type |
+|------|------|
+| ALA001 | Centrale d'Allarme |
+| ALA003 | Tastiera LCD |
+| ALA004 | Modulo GSM |
+| ALA006 | Tastiera |
+| ALA007 | Telecomando |
+| ALA009 | Contatto Magnetico |
+| ALA010 | Rilevatore Infrarosso |
+| ALA015 | Sirena Esterna |
+| ALA017 | Telecamera IP |
+| ALA018 | Ripetitore Segnale |
+| ALA020 | Espansione Filare |
+| ALA025 | Rilevatore Esterno |
+| ALA100 | Modulo RTC |
+| ALA102 | WiFi |
+| ALA103 | Sessione |
+| ALA104 | Batteria |
+| ALA105 | Cloud |
+| ALA106 | Telegestione |
+| ALA107 | Dashboard |
+| ALA201 | Carrier |
+
+### Area Assignment Format
+Areas are encoded as a 6-char string where each position corresponds to area 1-6. The area number is present if assigned, `-` if not:
+- `123456` = all areas
+- `123---` = areas 1-3 only
+- `-2----` = area 2 only
+- `1-----` = area 1 only
 
 ## Known Issues & TODOs
 - State reading on initial connection: The panel sends area states as part of the initial event stream after WebSocket connects and a HOME state request. If states aren't populated, a LOGIN→LOGOUT cycle can force an AL002 state event.

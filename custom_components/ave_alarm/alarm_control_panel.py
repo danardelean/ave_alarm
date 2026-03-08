@@ -23,10 +23,11 @@ from .ave_client import AVEAlarmClient
 
 _LOGGER = logging.getLogger(__name__)
 
-AREA_NAMES = {
-    "1": "Giardino",
-    "2": "Cortile",
-    "3": "Garage",
+# Fallback area names used when panel configuration is not available
+DEFAULT_AREA_NAMES = {
+    "1": "Area 1",
+    "2": "Area 2",
+    "3": "Area 3",
     "4": "Area 4",
     "5": "Area 5",
     "6": "Area 6",
@@ -45,12 +46,17 @@ async def async_setup_entry(
     entities: list[AVEAlarmPanel] = []
 
     # Create a panel entity for each configured area
+    # Use area names from the panel configuration if available
     for area_id in areas:
+        area_name = client.area_names.get(
+            area_id,
+            DEFAULT_AREA_NAMES.get(area_id, f"Area {area_id}"),
+        )
         entities.append(
             AVEAlarmPanel(
                 client=client,
                 area_id=area_id,
-                area_name=AREA_NAMES.get(area_id, f"Area {area_id}"),
+                area_name=area_name,
                 entry_id=entry.entry_id,
             )
         )

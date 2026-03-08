@@ -45,6 +45,8 @@ class AVEAlarmClient:
         self._ws: websockets.WebSocketClientProtocol | None = None
         self._connected = False
         self._area_states: dict[str, str] = {}
+        self._area_names: dict[str, str] = {}
+        self._area_enabled: dict[str, bool] = {}
         self._panel_serial: str = ""
         self._panel_state: str = ""
         self._anomalies: list[dict] = []
@@ -70,6 +72,16 @@ class AVEAlarmClient:
     def area_states(self) -> dict[str, str]:
         """Return current area states."""
         return self._area_states
+
+    @property
+    def area_names(self) -> dict[str, str]:
+        """Return area names from panel configuration."""
+        return self._area_names
+
+    @property
+    def area_enabled(self) -> dict[str, bool]:
+        """Return area enabled states from panel configuration."""
+        return self._area_enabled
 
     @property
     def panel_serial(self) -> str:
@@ -156,6 +168,9 @@ class AVEAlarmClient:
             self._connected = True
             _LOGGER.info("Connected to AVE alarm at %s", self.ws_url)
 
+            # Request panel configuration (area names, devices, etc.)
+            await self._send_file_configuration()
+
             # Request initial state
             await self._send_state_request("HOME")
 
@@ -194,6 +209,11 @@ class AVEAlarmClient:
         msg = self._build_request(
             "00", "STATE", f"<type>{state_type}</type>"
         )
+        await self._send(msg)
+
+    async def _send_file_configuration(self) -> None:
+        """Request the panel's FILE_CONFIGURATION XML."""
+        msg = self._build_request("00", "FILE_CONFIGURATION", "")
         await self._send(msg)
 
     async def _send_login(self) -> None:
@@ -423,12 +443,46 @@ class AVEAlarmClient:
             if updated:
                 self._notify_callbacks()
 
+        # Handle FILE_CONFIGURATION responses
+        elif msg_type == "FILE_CONFIGURATION":
+            self._parse_configuration(root)
+
         # Handle LOGIN responses
         elif msg_type == "MENU":
             act = root.findtext("act", "")
             res = root.findtext("res", "")
             if act == "LOGIN":
                 _LOGGER.debug("Login result: %s", res)
+
+    def _parse_configuration(self, root: ET.Element) -> None:
+        """Parse FILE_CONFIGURATION response to extract area names and devices."""
+        # The configuration may be wrapped in a Response/Configuration element
+        config = root.find("Configuration")
+        if config is None:
+            config = root
+
+        # Parse areas
+        areas_elem = config.find("Areas")
+        if areas_elem is not None:
+            for area in areas_elem.findall("Area"):
+                area_id = area.get("id", "")
+                area_desc = area.get("desc", f"Area {area_id}")
+                area_ena = area.get("ena", "FALSE").upper() == "TRUE"
+                if area_id:
+                    self._area_names[area_id] = area_desc
+                    self._area_enabled[area_id] = area_ena
+                    _LOGGER.debug(
+                        "Area %s: %s (enabled=%s)",
+                        area_id,
+                        area_desc,
+                        area_ena,
+                    )
+
+        if self._area_names:
+            _LOGGER.info(
+                "Loaded %d area names from panel configuration",
+                len(self._area_names),
+            )
 
     async def _listen_loop(self) -> None:
         """Listen for incoming WebSocket messages."""
