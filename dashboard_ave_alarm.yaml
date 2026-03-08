@@ -12,23 +12,23 @@ views:
           - arm_away
 
       # ── Per-Area Controls ──
-      - type: horizontal-stack
-        cards:
-          - type: alarm-panel
-            entity: alarm_control_panel.area_1
-            name: Giardino
-            states:
-              - arm_away
-          - type: alarm-panel
-            entity: alarm_control_panel.area_2
-            name: Cortile
-            states:
-              - arm_away
-          - type: alarm-panel
-            entity: alarm_control_panel.area_3
-            name: Garage
-            states:
-              - arm_away
+      - type: alarm-panel
+        entity: alarm_control_panel.area_1
+        name: Giardino
+        states:
+          - arm_away
+
+      - type: alarm-panel
+        entity: alarm_control_panel.area_2
+        name: Cortile
+        states:
+          - arm_away
+
+      - type: alarm-panel
+        entity: alarm_control_panel.area_3
+        name: Garage
+        states:
+          - arm_away
 
       # ── System Status ──
       - type: entities
