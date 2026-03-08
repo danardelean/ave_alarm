@@ -39,7 +39,7 @@ async def async_setup_entry(
 
     # We will dynamically add wired input and device sensors
     # once the TEST page data is loaded
-    entities.append(AVEWiredInputsSensor(client, entry.entry_id))
+    entities.append(AVEInputsSensor(client, entry.entry_id))
 
     # Create individual sensors for each monitored device
     # These show supervision/tamper/battery/alarm/rf status
@@ -144,22 +144,22 @@ class AVEWifiSensor(BinarySensorEntity):
         return self._client.connected
 
 
-class AVEWiredInputsSensor(BinarySensorEntity):
-    """Binary sensor summarizing wired input states.
+class AVEInputsSensor(BinarySensorEntity):
+    """Binary sensor summarizing input states (wired and wireless).
 
     ON = at least one input is triggered (not in normal state).
     Attributes contain per-input details.
     """
 
     _attr_has_entity_name = True
-    _attr_name = "Alarm Wired Inputs"
+    _attr_name = "Alarm Inputs"
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
     _attr_icon = "mdi:electric-switch"
 
     def __init__(self, client: AVEAlarmClient, entry_id: str) -> None:
         """Initialize."""
         self._client = client
-        self._attr_unique_id = f"ave_alarm_{entry_id}_wired_inputs"
+        self._attr_unique_id = f"ave_alarm_{entry_id}_inputs"
         self._unregister_callback = None
 
     async def async_added_to_hass(self) -> None:
@@ -180,7 +180,7 @@ class AVEWiredInputsSensor(BinarySensorEntity):
 
     @property
     def is_on(self) -> bool | None:
-        """Return True if any wired input is triggered."""
+        """Return True if any input is triggered."""
         inputs = self._client.wired_inputs
         if not inputs:
             return None
